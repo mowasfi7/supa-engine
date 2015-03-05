@@ -7,8 +7,8 @@ var router = express.Router();
 router.get('/stuff', function (req, res) {
 
     // show the request body in the command line
-    console.log("Get: " + req.params['msg']);
-    res.send("Got from stuff");
+    console.log("Get: " + req.body);
+    res.send("Got from stuff: " + req.body);
 
     // return a json response to angular
     // res.json({
