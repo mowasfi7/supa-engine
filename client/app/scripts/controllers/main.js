@@ -15,13 +15,13 @@ angular.module('clientApp')
       'Karma'
     ];
       $scope.post = function() {
-  	return $http.post('http://tranquil-tundra-3993.herokuapp.com/supapi/stuff', {
+  	return $http.post('http://tranquil-tundra-3993.herokuapp.com/supapi/test', {
       params: {
-        msg: "something"
+        msg: "good"
       }
     }).then(function(response){
     	console.log(response);
-    	alert(response.data.name);
+    	alert("Type: " + response.data.type + "\nNature: " + response.data.nature);
     });
 
   	// $http.get('localhost:3000/').
