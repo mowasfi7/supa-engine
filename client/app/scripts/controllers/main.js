@@ -15,7 +15,8 @@ angular.module('clientApp')
       'Karma'
     ];
       $scope.post = function() {
-  	return $http.post('http://tranquil-tundra-3993.herokuapp.com/supapi/stuff', {
+  	//return $http.post('http://tranquil-tundra-3993.herokuapp.com/supapi/stuff', {
+  		return $http.post('http://localhost:3000/supapi/stuff', {
       params: {
         msg: "something"
       }
@@ -38,7 +39,8 @@ angular.module('clientApp')
 	};
 
 	$scope.get = function(){
-		  	return $http.get('http://tranquil-tundra-3993.herokuapp.com/supapi/stuff', {
+		  	//return $http.get('http://tranquil-tundra-3993.herokuapp.com/supapi/stuff', {
+		  		return $http.get('http://localhost:3000/supapi/stuff', {
 			      params: {
 			        msg: "another"
 			      }
