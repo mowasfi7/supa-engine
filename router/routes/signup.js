@@ -46,7 +46,7 @@ router.post('/', function (req, res) {
             });
 
             // save the user to the database
-            newUser.save(function (err) {
+            newUser.save(function (err, savedUser, numberAffected) {
                 if (err) {
                     console.log('Problem saving the user ' + color.yellow(body.email) + ' due to ' + err);
                     res.status(500).json({
