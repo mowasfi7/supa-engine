@@ -1,32 +1,17 @@
 $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
 
 @import "variables";
-@import "partials/signup";
 @import 'mixins';
+@import "partials/signup";
+@import "partials/home";
+@import "partials/profile";
+@import "partials/about";
 
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
 @import url(http://fonts.googleapis.com/css?family=Indie+Flower);
-
-// Colours
-$white: #fff;
-$red: #A83C38;
-$orange: #FD9426;
-$yellow: #F4C025;
-$green: #9BC144;
-$blue: #4E8EA6;
-$indigo: #285477;
-$violet: #513465;
-$dark-grey: #222222;
-
-$accent: $green;
-$contrast: $yellow;
-
-// Font
-
-$font: 'Indie Flower', cursive;
 
 .colorchart{
     display: none;
@@ -81,79 +66,6 @@ body {
 
 }
 
-.big-img{
-    background: url(../images/Fruit-and-vegetables.jpg) no-repeat center center;
-    background-size: 100%;
-    height: 400px;
-}
-
-.nav-img{
-    width: 100px;
-    height: 100px;
-}
-
-.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
-    background-color: $accent;
-}
-
-.call-to-action{
-    color: $white;
-}
-
-.marketing{
-    margin-top: 50px;
-    font-size: 2em;
-    font-family: $font;
-
-    .col-sm-4{
-        margin-bottom: 20px;
-        text-align: center;
-
-        p{
-            margin-right: 30px;
-            margin-left: 30px;
-            margin-top: 30px;
-        }
-    }
-
-    h2{
-        font-weight: normal;
-    }
-
-    .step{
-        width: 140px;
-        height: 140px;
-        line-height: 140px;
-        border-radius: 50%;
-        background-color: $accent;
-        margin-left: auto;
-        margin-right: auto;
-        color: $white;
-        font-size: 140px;
-    }
-
-    .row{
-        padding: 10px;
-        @include roundcornerTL();
-        @include roundcornerTR();
-        background-color: rgba(255,255,255,0.8);
-    }
-}
-
-.main-search{
-    margin-top: 65px;
-    color: $dark-grey;
-
-    label{
-        font-family: $font;
-        font-size: 24px;
-    }
-    .errormessage{
-        margin-top: 10px;
-        margin-bottom: 0;
-    }
-}
-
 .glyphicon.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
@@ -203,56 +115,6 @@ footer {
     margin-bottom: 30px;
 }
 
-.modal-open {
-    overflow: auto;
-}
-
-/* numbered buttons */
-.status-buttons{
-    float: right;
-
-    a{
-        display: inline-block;
-        font-size: 18px;
-        margin-right: 10px;
-        text-align: center;
-        text-decoration: none;
-        font-family: $font;
-        color: $white;
-
-        &:hover{
-            text-decoration: none;
-        }
-    }
-
-    .active{
-        span{
-            background: $contrast;
-        }
-    }
-
-    span{
-        background: $accent;
-        display: block;
-        margin: 0 auto 10px;
-        height: 24px;
-        padding-top: 1px;
-        width: 24px;
-        border-radius: 50%;
-    }
-}
-
-.status-button{
-    background: $accent;
-    display: block;
-    float: right;
-    height: 24px;
-    padding-top: 1px;
-    width: 24px;
-    border-radius: 50%;
-    font-family: $font;
-}
-
 .background-image{
     background: url(../images/Fruit-and-vegetables.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -279,4 +141,8 @@ footer {
     -o-filter: blur(5px) grayscale(0.6);
     -ms-filter: blur(5px) grayscale(0.6);
     filter: blur(5px) grayscale(0.6);
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
+    background-color: $accent;
 }

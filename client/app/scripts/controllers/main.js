@@ -49,7 +49,7 @@ angular.module('clientApp')
         return $http.get('http://maps.googleapis.com/maps/api/geocode/json', {
             params: {
                 address: val,
-                components: 'country: IE'
+                components: 'country:IE'
             }
         }).then(function(response){
             return response.data.results.map(function(item){

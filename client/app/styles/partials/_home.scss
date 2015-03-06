@@ -1,0 +1,103 @@
+.marketing{
+    margin-top: 50px;
+    font-size: 2em;
+    font-family: $font;
+
+    .col-sm-4{
+        margin-bottom: 20px;
+        text-align: center;
+
+        p{
+            margin-right: 30px;
+            margin-left: 30px;
+            margin-top: 30px;
+        }
+    }
+
+    h2{
+        font-weight: normal;
+    }
+
+    .step{
+        width: 140px;
+        height: 140px;
+        line-height: 140px;
+        border-radius: 50%;
+        background-color: $accent;
+        margin-left: auto;
+        margin-right: auto;
+        color: $white;
+        font-size: 140px;
+    }
+
+    .row{
+        padding: 10px;
+        @include roundcornerTL();
+        @include roundcornerTR();
+        background-color: rgba(255,255,255,0.8);
+    }
+}
+
+.call-to-action{
+    color: $white;
+}
+
+.main-search{
+    margin-top: 65px;
+    color: $dark-grey;
+
+    label{
+        font-family: $font;
+        font-size: 24px;
+    }
+    .errormessage{
+        margin-top: 10px;
+        margin-bottom: 0;
+    }
+}
+
+/* numbered buttons */
+.status-buttons{
+    float: right;
+
+    a{
+        display: inline-block;
+        font-size: 18px;
+        margin-right: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-family: $font;
+        color: $white;
+
+        &:hover{
+            text-decoration: none;
+        }
+    }
+
+    .active{
+        span{
+            background: $contrast;
+        }
+    }
+
+    span{
+        background: $accent;
+        display: block;
+        margin: 0 auto 10px;
+        height: 24px;
+        padding-top: 1px;
+        width: 24px;
+        border-radius: 50%;
+    }
+}
+
+.status-button{
+    background: $accent;
+    display: block;
+    float: right;
+    height: 24px;
+    padding-top: 1px;
+    width: 24px;
+    border-radius: 50%;
+    font-family: $font;
+}

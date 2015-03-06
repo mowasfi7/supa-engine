@@ -1,0 +1,8 @@
+.nav .nav-img{
+    width: 100px;
+    height: 100px;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
+    background-color: $accent;
+}
