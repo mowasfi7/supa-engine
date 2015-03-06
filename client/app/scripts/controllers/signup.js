@@ -44,15 +44,17 @@ angular.module('clientApp') // make sure this is set to whatever it is in your c
 			console.log(user);
  
 			// Make the request to the server ... which doesn't exist just yet
-			var request = $http.post('/signup', user);
+
+			//var request = $http.post('http://tranquil-tundra-3993.herokuapp.com/signup', user);
+			var request = $http.post('http://localhost:3000/signup', user);
  
 			// we'll come back to here and fill in more when ready
 			request.success(function (data) {
-				// to be filled in on success
+				console.log(data);
 			});
  
 			request.error(function (data) {
-				// to be filled in on error
+				console.log(data);
 			});
  
 		};

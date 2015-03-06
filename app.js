@@ -5,11 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var signup = require('./routes/signup');
-var supapi = require('./routes/supapi');
-
 var app = express();
 
 app.use(function (req, res, next) {
@@ -47,28 +42,6 @@ if (app.get('env') == 'development') {
     });
 }
 
-/**
- * Production Settings
- */
-if (app.get('env') == 'production') {
-
-    // changes it to use the optimized version for production
-    app.use(express.static(path.join(__dirname, '/dist')));
-
-    // production error handler
-    // no stacktraces leaked to user
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: {}
-        });
-    });
-}
-
-app.use('/signup', signup);
-app.use('/supapi', supapi);
-
-
+var router = require('./router')(app);
 
 module.exports = app;
