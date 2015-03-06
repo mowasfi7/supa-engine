@@ -1,40 +1,25 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo! YO</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p>
-    <a href="#/signup" class="btn btn-lg btn-success">
-    Signup 
-    <i class="fa fa-chevron-circle-right"></i>
-    </a>
-  </p>
-  <p>
-    <a href="#/" ng-click="post()" class="btn btn-lg btn-success">
-    Post 
-    <i class="fa fa-chevron-circle-right"></i>
-    </a>
-  </p>
-  <p>
-    <a href="#/" ng-click="get()" class="btn btn-lg btn-success">
-    Get 
-    <i class="fa fa-chevron-circle-right"></i>
-    </a>
-  </p>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 call-to-action">
+        <form class="main-search well" ng-submit="processForm()">
+            <div id="form-views" ui-view></div>
+        </form>
+    </div>
 </div>
 
-<div class="row marketing">
-  <h4>HTML5 Boilerplate</h4>
-  <p>
-    HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.
-  </p>
-
-  <h4>Angular</h4>
-  <p>
-    AngularJS is a toolset for building the framework most suited to your application development.
-  </p>
-
-  <h4>Karma</h4>
-  <p>Spectacular Test Runner for JavaScript.</p>
+<div class="container marketing">
+    <div class="row">
+        <p>Easy as...</p>
+        <div class="col-sm-4">
+            <div class="step">1</div>
+            <p>Tell us where you are</p>
+        </div>
+        <div class="col-sm-4">
+            <div class="step">2</div>
+            <p>Tell us what you want to buy</p>
+        </div>
+        <div class="col-sm-4">
+            <div class="step">3</div>
+            <p>We'll tell you where to find the best deal</p>
+        </div>
+    </div>
 </div>

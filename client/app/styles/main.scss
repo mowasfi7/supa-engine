@@ -1,93 +1,282 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+
 @import "variables";
 @import "partials/signup";
+@import 'mixins';
 
 // bower:scss
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
+@import url(http://fonts.googleapis.com/css?family=Indie+Flower);
+
+// Colours
+$white: #fff;
+$red: #A83C38;
+$orange: #FD9426;
+$yellow: #F4C025;
+$green: #9BC144;
+$blue: #4E8EA6;
+$indigo: #285477;
+$violet: #513465;
+$dark-grey: #222222;
+
+$accent: $green;
+$contrast: $yellow;
+
+// Font
+
+$font: 'Indie Flower', cursive;
+
+.colorchart{
+    display: none;
+    position: absolute;
+    top: 30;
+    right: 0;
+    z-index: 10;
+    .box-color{
+        width: 50px;
+        height: 50px;
+    }
+    .color-1{
+        background-color: $white;
+    }
+    .color-2{
+        background-color: $red;
+    }
+    .color-3{
+        background-color: $orange;
+    }
+    .color-4{
+        background-color: $yellow;
+    }
+    .color-5{
+        background-color: $green;
+    }
+    .color-6{
+        background-color: $blue;
+    }
+    .color-7{
+        background-color: $indigo;
+    }
+    .color-8{
+        background-color: $violet;
+    }
+    .color-9{
+        background-color: $dark-grey;
+    }
+}
+
 .browsehappy {
-  margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
-  padding: 0.2em 0;
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
 }
 
 body {
-  padding: 0;
+    padding: 0;
+    padding-top: 50px;
+    background-color: inherit;
+
 }
 
-/* Everything but the jumbotron gets side spacing for mobile first views */
-.header,
-.marketing,
-.footer {
-  padding-left: 15px;
-  padding-right: 15px;
+.big-img{
+    background: url(../images/Fruit-and-vegetables.jpg) no-repeat center center;
+    background-size: 100%;
+    height: 400px;
 }
 
-/* Custom page header */
-.header {
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 10px;
-
-  /* Make the masthead heading the same height as the navigation */
-  h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 40px;
-    padding-bottom: 19px;
-  }
+.nav-img{
+    width: 100px;
+    height: 100px;
 }
 
-/* Custom page footer */
-.footer {
-  padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
+    background-color: $accent;
 }
 
-.container-narrow > hr {
-  margin: 30px 0;
+.call-to-action{
+    color: $white;
 }
 
-/* Main marketing message and sign up button */
-.jumbotron {
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
+.marketing{
+    margin-top: 50px;
+    font-size: 2em;
+    font-family: $font;
 
-  .btn {
-    font-size: 21px;
-    padding: 14px 24px;
-  }
+    .col-sm-4{
+        margin-bottom: 20px;
+        text-align: center;
+
+        p{
+            margin-right: 30px;
+            margin-left: 30px;
+            margin-top: 30px;
+        }
+    }
+
+    h2{
+        font-weight: normal;
+    }
+
+    .step{
+        width: 140px;
+        height: 140px;
+        line-height: 140px;
+        border-radius: 50%;
+        background-color: $accent;
+        margin-left: auto;
+        margin-right: auto;
+        color: $white;
+        font-size: 140px;
+    }
+
+    .row{
+        padding: 10px;
+        @include roundcornerTL();
+        @include roundcornerTR();
+        background-color: rgba(255,255,255,0.8);
+    }
 }
 
-/* Supporting marketing content */
-.marketing {
-  margin: 40px 0;
+.main-search{
+    margin-top: 65px;
+    color: $dark-grey;
 
-  p + h4 {
-    margin-top: 28px;
-  }
+    label{
+        font-family: $font;
+        font-size: 24px;
+    }
+    .errormessage{
+        margin-top: 10px;
+        margin-bottom: 0;
+    }
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
 
-  /* Remove the padding we set earlier */
-  .header,
-  .marketing,
-  .footer {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  /* Space out the masthead */
-  .header {
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+
+// sticky footer
+html,
+body {
+    height: 100%;
+    /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+.wrap {
+    min-height: 100%;
+    height: auto;
+    /* Negative indent footer by its height */
+    margin: 0 auto -60px;
+    /* Pad bottom by footer height */
+    padding: 0 0 60px;
+}
+
+/* Set the fixed height of the footer here */
+footer {
+    height: 60px;
+    color: $white;
+    background-color: $dark-grey;
+    padding: 10px;
+}
+
+.heading{
+    @include roundcornerBL();
+    @include roundcornerBR();
+    background-color: rgba(255,255,255, 0.8);
+    padding: 20px;
     margin-bottom: 30px;
-  }
-  /* Remove the bottom border on the jumbotron for visual effect */
-  .jumbotron {
-    border-bottom: 0;
-  }
+}
+
+.modal-open {
+    overflow: auto;
+}
+
+/* numbered buttons */
+.status-buttons{
+    float: right;
+
+    a{
+        display: inline-block;
+        font-size: 18px;
+        margin-right: 10px;
+        text-align: center;
+        text-decoration: none;
+        font-family: $font;
+        color: $white;
+
+        &:hover{
+            text-decoration: none;
+        }
+    }
+
+    .active{
+        span{
+            background: $contrast;
+        }
+    }
+
+    span{
+        background: $accent;
+        display: block;
+        margin: 0 auto 10px;
+        height: 24px;
+        padding-top: 1px;
+        width: 24px;
+        border-radius: 50%;
+    }
+}
+
+.status-button{
+    background: $accent;
+    display: block;
+    float: right;
+    height: 24px;
+    padding-top: 1px;
+    width: 24px;
+    border-radius: 50%;
+    font-family: $font;
+}
+
+.background-image{
+    background: url(../images/Fruit-and-vegetables.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -1000;
+    -webkit-transform: translateZ(0);
+    background-attachment: scroll;
+    filter: grayscale(0.6);
+    -webkit-filter: grayscale(0.6);
+    -moz-filter: grayscale(0.6);
+    -o-filter: grayscale(0.6);
+    -ms-filter: grayscale(0.6);
+}
+
+.blurred{
+    @extend .background-image;
+    -webkit-filter: blur(5px) grayscale(0.6);
+    -moz-filter: blur(5px) grayscale(0.6);
+    -o-filter: blur(5px) grayscale(0.6);
+    -ms-filter: blur(5px) grayscale(0.6);
+    filter: blur(5px) grayscale(0.6);
 }

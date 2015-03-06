@@ -7,11 +7,11 @@
  * # AboutCtrl
  * Controller of the clientApp
  */
-angular.module('clientApp')
-  .controller('AboutCtrl', function ($scope) {
+ angular.module('clientApp')
+ .controller('AboutCtrl', function ($scope) {
     $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
+    'HTML5 Boilerplate',
+    'AngularJS',
+    'Karma'
     ];
-  });
+ });

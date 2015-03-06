@@ -1,0 +1,51 @@
+// rounded corners
+
+@mixin roundcorners($radius) {
+    -moz-border-radius: $radius;
+    -webkit-border-radius: $radius;
+    border-radius: $radius;
+}
+
+@mixin roundcorner1($radius, $corner: "top-left") {
+    -moz-border-#{$corner}-radius: $radius ;
+    -webkit-border-#{$corner}-radius: $radius;
+    border-#{$corner}-radius: $radius;
+}
+@mixin squarecorner1($corner: "top-left") {
+    @include roundcorner1(0px, $corner);
+}
+
+@mixin roundcornerTL($radius:20px){
+	@include roundcorner1($radius, "top-left");
+}
+@mixin roundcornerTR($radius:20px){
+	@include roundcorner1($radius, "top-right");
+}
+@mixin roundcornerBL($radius:20px){
+	@include roundcorner1($radius, "bottom-left");
+}
+@mixin roundcornerBR($radius:20px){
+	@include roundcorner1($radius, "bottom-right");
+}
+@mixin squarecornerTL(){
+	@include roundcornerTL(0px);
+}
+@mixin squarecornerTR(){
+	@include roundcornerTR(0px);
+}
+@mixin squarecornerBL(){
+	@include roundcornerBL(0px);
+}
+@mixin squarecornerBR(){
+	@include roundcornerBR(0px);
+}
+
+// Most simplistic application of above
+// .rounded {
+//   @include roundcorners(5px);
+// }
+
+// .roundedTop {
+//   @include roundcornerTL(5px);
+//   @include roundcornerTR(5px);
+// }
