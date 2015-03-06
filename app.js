@@ -13,7 +13,6 @@ var supapi = require('./routes/supapi');
 var app = express();
 
 app.use(function (req, res, next) {
-    console.log("will allow cross origin");
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
