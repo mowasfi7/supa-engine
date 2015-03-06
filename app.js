@@ -25,12 +25,8 @@ app.use(cookieParser());
 /**
  * Development Settings
  */
-if (app.get('env') == 'development') {
-    // This will change in production since we'll be using the dist folder
-    app.use(express.static(path.join(__dirname, '../client')));
-    // This covers serving up the index page
-    app.use(express.static(path.join(__dirname, '../client/.tmp')));
-    app.use(express.static(path.join(__dirname, '../client/app')));
+if (app.get('env') == 'production') {
+    app.use(express.static(path.join(__dirname, '/dist')));
 }
 
 var router = require('./router')(app);

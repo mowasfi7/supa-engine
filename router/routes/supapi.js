@@ -25,5 +25,19 @@ router.post('/stuff', function (req, res) {
     // });
 });
 
+router.post('/test', function (req, res) {
+    console.log(req.body);
+    var param = req.body.msg;
+    if(param == "good"){
+        res.json({type: 'Good', nature: 'Also good'});
+    }
+    else if (param == "bad"){
+        res.json({type: 'Bad', nature: 'Heck'});
+    }
+    else{
+        res.status(500).send('Unrecognized request');
+    }
+});
+
 // Expose the module
 module.exports = router;
