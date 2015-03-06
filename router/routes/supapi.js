@@ -26,8 +26,8 @@ router.post('/stuff', function (req, res) {
 });
 
 router.post('/test', function (req, res) {
-    console.log(req.body.params);
-    var param = req.body.params.msg;
+    console.log(req.body);
+    var param = req.body.msg;
     if(param == "good"){
         res.json({type: 'Good', nature: 'Also good'});
     }
