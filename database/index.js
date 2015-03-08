@@ -1,39 +1,30 @@
-/**
- * Our Database Interface
- */
-var mongoose = require('mongoose');
-mongoose.set('debug', true);
+var mongoose = require( 'mongoose' );
+var dbURI = 'mongodb://wasfi:mongopass@ds039211.mongolab.com:39211/supamarket';
 var UserModel = require('./schemas/users');
 
-// Connections
-var developmentDb = 'mongodb://wasfi:mongopass@ds039211.mongolab.com:39211/supamarket';
-var productionDb = 'mongodb://wasfi:mongopass@ds039211.mongolab.com:39211/supamarket';
-var usedDb;
+mongoose.connect(dbURI);
 
-// If we're in development...
-if (process.env.NODE_ENV === 'development') {
-    // set our database to the development one
-    usedDb = developmentDb;
-    // connect to it via mongoose
-    mongoose.connect(usedDb, {safe:false});
-}
+mongoose.connection.on('connected', function () {
+  console.log('Mongoose default connection open to ' + dbURI);
+});
 
-// If we're in production...
-if (process.env.NODE_ENV === 'production') {
-    // set our database to the development one
-    usedDb = productionDb;
-    // connect to it via mongoose
-    mongoose.connect(usedDb, {safe:false});
-}
+mongoose.connection.on('error', function (err) {
+  console.log('Mongoose default connection error: ' + err);
+});
 
-// get an instance of our connection to our database
-var db = mongoose.connection;
+mongoose.connection.on('disconnected', function () {
+  console.log('Mongoose default connection disconnected');
+});
 
-// Logs that the connection has successfully been opened
-db.on('error', console.error.bind(console, 'connection error:'));
-// Open the connection
-db.once('open', function callback () {
-  console.log('Database Connection Successfully Opened at ' + usedDb);
+mongoose.connection.on('open', function () {
+  console.log('Mongoose default connection is open');
+});
+
+process.on('SIGINT', function() {
+  mongoose.connection.close(function () {
+    console.log('Mongoose default connection disconnected through app termination');
+    process.exit(0);
+  });
 });
 
 exports.users = UserModel;

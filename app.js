@@ -7,6 +7,17 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+if (app.get('env') == 'production') {
+    app.use(express.static(path.join(__dirname, '/dist')));
+}
+
+var router = require('./router')(app);
+
 app.use(function (req, res, next) {
 	console.log('Setting Allow Origin');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
@@ -16,25 +27,13 @@ app.use(function (req, res, next) {
     next();
 });
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-
-/**
- * Development Settings
- */
-if (app.get('env') == 'production') {
-    app.use(express.static(path.join(__dirname, '/dist')));
-}
-
-var router = require('./router')(app);
-
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
+app.get('/', function (req, res) {
+	res.send("<center><h1>Welcome to Supapi Server</h1></center>");
 });
 
+app.use(function(err, req, res, next) {
+	console.log("In error handler");
+    res.status(err.status || 500);
+});
 
 module.exports = app;
