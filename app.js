@@ -34,6 +34,7 @@ app.get('/', function (req, res) {
 
 app.use(function(err, req, res, next) {
 	console.log("In error handler");
+    console.log(err);
     res.status(err.status || 500);
 });
 
