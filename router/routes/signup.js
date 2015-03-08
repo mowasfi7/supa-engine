@@ -6,11 +6,11 @@ var router = express.Router();
 var moment = require('moment');
 var _ = require('underscore');
 var color = require('cli-color');
+var db = require('../../database');
+var Users = db.users;
 
 // The POST /signup route
 router.post('/', function (req, res) {
-    var db = require('../../database');
-    var Users = db.users;
     // The posted information from the front-end
     var body = req.body;
     // Current time this occurred
@@ -55,7 +55,6 @@ router.post('/', function (req, res) {
                 }
                 else{
                     console.log('Successfully created new user: ' + color.green(body.email));
-
                     res.status(201).json({
                         'message': 'Successfully created new user',
                         'client': _.omit(savedUser, 'password')
