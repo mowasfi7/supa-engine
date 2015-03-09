@@ -2,71 +2,73 @@ var express = require('express');
 var router = express.Router();
 var http = require('http');
 
-router.get('/pullproducts', function (req, res) {
+var path, data, response, sessionKey;
 
-	var path = '/API/2/Session.asmx/Login';
-	var data = {
-		"pwd":"HMsQmP3Wyr+mt",
-		"userEmail":"sv_api@sv.ie",
-		"appKey":"72c62b26-9892-456b-ae34-b4fcee776a7d"
-	};
-
-	supervalueRequest(path, data, res);
-	
-});
-
-function supervalueRequest(path, data, res){
+var supervalueRequest = function(req, res, next){
 	var dataString = JSON.stringify(data);
 	var headers = {
 		'Content-Type': 'application/json',
 		'Content-Length': dataString.length
 	};
 	var options = {
-		host: 'shop.supervalu.ie',
+		hostname: 'shop.supervalu.ie',
 		path: path,
 		method: 'POST',
 		headers: headers
 	};
 	var svReq = http.request(options, function(svRes) {
-		var responseString;
+		var responseString = '';
 		svRes.on('data', function(data) {
-			responseString = data;
+			responseString += data;
 		});
 		svRes.on('end', function() {
-			res.json(JSON.parse(responseString));
+			response = JSON.parse(responseString);
+			if(response.d){
+				if(response.d.ResponseCode == 0){
+					response = response.d;
+					next();
+				}
+				else{
+					res.status(500).send(response.d.ResponseInfo);
+				}
+				
+			}
+			else{
+				res.status(500).send("response.d not found");
+			}
 		});
 	});
 
 	svReq.on('error', function(e) {
 		console.log(e);
-		res.status(err.status || 500);
+		res.status(500).send("error connecting to " + path);
 	});
 
 	svReq.write(dataString);
 	svReq.end();
-}
+};
+
+router.get('/pullproducts',
+	function (req, res, next) {
+		path = '/API/2/Session.asmx/Login';
+		data = {"pwd":"HMsQmP3Wyr+mt",
+				"userEmail":"sv_api@sv.ie",
+				"appKey":"72c62b26-9892-456b-ae34-b4fcee776a7d"};
+		next();
+	},
+	supervalueRequest,
+	function (req, res, next) {
+		path = '/API/2/Assortment.asmx/GetCategoryTree';
+		data = {"type":"N",
+				"cacheDate":"20100101 00:01",
+				"cacheStoreID":1713,
+				"sessionKey": response.SessionKey};
+		next();
+	},
+	supervalueRequest,
+	function(req, res){
+		res.json(response);
+});
+
 
 module.exports = router;
-
-/*
-function apiCall(url, req){
-	$ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Connection: close'));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $raw_response = curl_exec($ch);
-    if (curl_errno($ch)){
-        die('Error: ' . curl_error($ch));
-    }
-    curl_close($ch);
-    $json_response = json_decode($raw_response);
-    if(!isset($json_response->d)){
-        die($raw_response);
-    }
-    else if($json_response->d->ResponseCode != '0'){
-        die($json_response);
-    }
-    return $json_response->d;
-}*/
-
