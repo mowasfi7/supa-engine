@@ -50,11 +50,21 @@ var supervalueRequest = function(req, res, next){
 
 router.get('/pullproducts',
 	function (req, res, next) {
-		path = '/API/2/Session.asmx/Login';
-		data = {"pwd":"HMsQmP3Wyr+mt",
-				"userEmail":"sv_api@sv.ie",
-				"appKey":"72c62b26-9892-456b-ae34-b4fcee776a7d"};
-		next();
+		var username, password;
+		var fs = require('fs');
+		fs.readFile('./private/supervalu.txt', function(err, content) {
+		    if(err){
+		    	res.status(500).send(err);
+		    }
+		    var credentials = content.toString().split('|');
+		    username = credentials[0];
+		    password = credentials[1];
+		    path = '/API/2/Session.asmx/Login';
+			data = {"pwd":password,
+					"userEmail":username,
+					"appKey":"72c62b26-9892-456b-ae34-b4fcee776a7d"};
+			next();
+		});
 	},
 	supervalueRequest,
 	function (req, res, next) {
