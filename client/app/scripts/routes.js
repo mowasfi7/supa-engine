@@ -5,24 +5,24 @@ angular.module('clientApp')
 	$stateProvider
 	.state('home', {
 		url: '/',
-		templateUrl: 'views/main.html',
+		templateUrl: 'views/home/main.html',
 		controller: 'MainCtrl',
 		abstract: true
 	})
 	.state('about', {
 		url: '/about',
-		templateUrl: 'views/about.html',
+		templateUrl: 'views/about/main.html',
 		controller: 'AboutCtrl',
 		abstract: true
 	})
 	.state('profile', {
 		url: '/profile',
-		templateUrl: 'views/profile.html',
+		templateUrl: 'views/profile/main.html',
 		controller: 'ProfileCtrl'
 	})
 	.state('signup', {
 		url: '/signup',
-		templateUrl: 'views/signup.html',
+		templateUrl: 'views/users/signup.html',
 		controller: 'SignupCtrl'
 	})
 
@@ -35,42 +35,42 @@ angular.module('clientApp')
 	// each of these sections will have their own view
 	.state('home.location', {
 		url: '',
-		templateUrl: 'views/form-location.html'
+		templateUrl: 'views/home/location.html'
 	})
 
 	.state('home.shoppinglist', {
 		url: '',
-		templateUrl: 'views/form-shoppinglist.html'
+		templateUrl: 'views/home/shoppinglist.html'
 	})
 
 	.state('about.theApp', {
 		url: '/theapp',
-		templateUrl: 'views/about-theapp.html'
+		templateUrl: 'views/about/theapp.html'
 	})
 
 	.state('about.wasfi', {
 		url: '/wasfi',
-		templateUrl: 'views/about-wasfi.html'
+		templateUrl: 'views/about/wasfi.html'
 	})
 
 	.state('about.marco', {
 		url: '/marco',
-		templateUrl: 'views/about-marco.html'
+		templateUrl: 'views/about/marco.html'
 	})
 
 	.state('about.amanda', {
 		url: '/amanda',
-		templateUrl: 'views/about-amanda.html'
+		templateUrl: 'views/about/amanda.html'
 	})
 
 	.state('profile.options', {
 		url: '/options',
-		templateUrl: 'views/profile-options.html'
+		templateUrl: 'views/profile/options-edit.html'
 	})
 
-	.state('profile.personal', {
-		url: '/personal',
-		templateUrl: 'views/profile-personal.html'
+	.state('profile.details', {
+		url: '/details',
+		templateUrl: 'views/profile/details.html'
 	});
 
 	$urlRouterProvider.otherwise('/notfound');

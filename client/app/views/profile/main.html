@@ -1,0 +1,21 @@
+<div class="heading">
+	<h1>Profile</h1>
+</div>
+
+<div class="well">
+	<div class="row">
+		<div class="col-md-3">
+			<ul class="nav nav-pills nav-stacked">
+				<li role="presentation" ui-sref-active="active" ui-sref="profile.details">
+					<a href="profile.details">Personal Info</a>
+				</li>
+				<li role="presentation" ui-sref-active="active" ui-sref="profile.options">
+					<a href="profile.options">Options</a>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-9">
+			<div ui-view=""></div>
+		</div>
+	</div>
+</div>

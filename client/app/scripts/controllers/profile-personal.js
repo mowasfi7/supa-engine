@@ -12,7 +12,7 @@
  	$scope.open = function (size) {
 
  		var modalInstance = $modal.open({
- 			templateUrl: 'views/profile-personal-edit.html',
+ 			templateUrl: 'views/profile/details-edit.html',
  			controller: 'ProfilePersonalEditCtrl',
  			size: size
  		});
