@@ -6,19 +6,17 @@ angular.module('clientApp')
 	.state('home', {
 		url: '/',
 		templateUrl: 'views/home/main.html',
-		controller: 'MainCtrl',
+		controller: 'HomeCtrl',
 		abstract: true
 	})
 	.state('about', {
 		url: '/about',
 		templateUrl: 'views/about/main.html',
-		controller: 'AboutCtrl',
 		abstract: true
 	})
 	.state('profile', {
 		url: '/profile',
-		templateUrl: 'views/profile/main.html',
-		controller: 'ProfileCtrl'
+		templateUrl: 'views/profile/main.html'
 	})
 	.state('signup', {
 		url: '/signup',
@@ -70,7 +68,12 @@ angular.module('clientApp')
 
 	.state('profile.details', {
 		url: '/details',
-		templateUrl: 'views/profile/details.html'
+		templateUrl: 'views/profile/details-view.html'
+	})
+
+	.state('profile.details.edit', {
+		url: '/edit',
+		templateUrl: 'views/profile/details-edit.html'
 	});
 
 	$urlRouterProvider.otherwise('/notfound');

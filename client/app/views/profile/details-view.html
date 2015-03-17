@@ -1,0 +1,28 @@
+<!-- start profile/details-view.html -->
+<h1>Personal Info</h1>
+<hr>
+<div class="row" ui-view="">
+	<div class="col-xs-12 col-sm-4 text-center">
+		<img src="http://api.randomuser.me/portraits/women/21.jpg" alt="" class="center-block img-circle img-thumbnail img-responsive">
+	</div>
+	<!--/col-->
+	<div class="col-xs-12 col-sm-8 text-center">
+		<h2>Jane Doe</h2>
+		<p><strong>Username: </strong> janedoe </p>
+		<p><strong>Email: </strong> jane@example.com </p>
+		<p><strong>Password: </strong> ************** </p>
+		<p><strong>Location: </strong> Dublin 3</p>
+	</div>
+	<!--/col-->
+	<hr>
+	<div class="row">
+		<div class="col-xs-12 col-sm-4 col-sm-offset-8">
+			<button class="btn btn-default btn-block" ui-sref="profile.details.edit">
+				<span class="glyphicon glyphicon-edit" aria-hidden="true">
+				</span>
+				 Edit
+			</button>
+		</div>
+	</div>
+</div>
+<!-- end profile/details-view.html -->
