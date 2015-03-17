@@ -1,75 +1,40 @@
 <!-- start profile/details-edit.html -->
-<div class="container-fluid">
-	<h1 class="page-header">Edit Profile</h1>
-	<div class="row">
-		<!-- left column -->
-		<div class="col-md-4 col-sm-6 col-xs-12">
-			<div class="text-center">
-				<img src="http://api.randomuser.me/portraits/women/21.jpg" class="avatar img-circle img-thumbnail" alt="avatar">
-				<h6>Upload a different photo...</h6>
-				<input type="file" class="text-center center-block well well-sm">
+<h1>Edit Profile</h1>
+<hr>
+<!-- left column -->
+<div class="col-md-4 col-sm-6 col-xs-12">
+	<div class="text-center">
+		<img src="http://api.randomuser.me/portraits/women/21.jpg" class="avatar img-circle img-thumbnail" alt="avatar">
+		<h6>Upload a different photo...</h6>
+		<input type="file" class="text-center center-block well well-sm">
+	</div>
+</div>
+<!-- edit form column -->
+<div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+	<h3>Personal Info</h3>
+
+	<form class="form-horizontal" role="form">
+		<div class="alert alert-info alert-dismissable">
+			<a class="panel-close close" data-dismiss="alert">×</a>
+			This is an <strong>.alert</strong>. Use this to show important messages to the user.
+		</div>
+
+		<sm-input label="First name:" value="Jane" type="text"></sm-input>
+		<sm-input label="Last name:" value="Doe" type="text"></sm-input>
+		<sm-input label="Email:" value="jane@example" type="email"></sm-input>
+		<sm-input label="Location:" value="Dublin 3" type="text"></sm-input>
+		<sm-input label="Username:" value="janedoe" type="text"></sm-input>
+		<sm-input label="Password:" value="11111122333" type="password"></sm-input>
+		<sm-input label="Confirm password:" value="11111122333" type="password"></sm-input>
+
+		<div class="form-group">
+			<label class="col-md-3 control-label"></label>
+			<div class="col-md-8">
+				<input class="btn btn-primary" ng-click="ok()" value="Save Changes" type="button">
+				<span></span>
+				<input class="btn btn-default" ng-click="cancel()" value="Cancel" type="reset">
 			</div>
 		</div>
-		<!-- edit form column -->
-		<div class="col-md-8 col-sm-6 col-xs-12 personal-info">
-			<h3>Personal Info</h3>
-			<form class="form-horizontal" role="form">
-				<div class="alert alert-info alert-dismissable">
-					<a class="panel-close close" data-dismiss="alert">×</a>
-					This is an <strong>.alert</strong>. Use this to show important messages to the user.
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 control-label">First name:</label>
-					<div class="col-lg-8">
-						<input class="form-control" value="Jane" type="text">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 control-label">Last name:</label>
-					<div class="col-lg-8">
-						<input class="form-control" value="Doe" type="text">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 control-label">Email:</label>
-					<div class="col-lg-8">
-						<input class="form-control" value="jane@example.com" type="text">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-3 control-label">Location:</label>
-					<div class="col-lg-8">
-						<input class="form-control" value="Dublin 3" type="text">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label">Username:</label>
-					<div class="col-md-8">
-						<input class="form-control" value="janedoe" type="text">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label">Password:</label>
-					<div class="col-md-8">
-						<input class="form-control" value="11111122333" type="password">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label">Confirm password:</label>
-					<div class="col-md-8">
-						<input class="form-control" value="11111122333" type="password">
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 control-label"></label>
-					<div class="col-md-8">
-						<input class="btn btn-primary" ng-click="ok()" value="Save Changes" type="button">
-						<span></span>
-						<input class="btn btn-default" ng-click="cancel()" value="Cancel" type="reset">
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+	</form>
 </div>
 <!-- end profile/details-edit.html -->
