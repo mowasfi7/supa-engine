@@ -9,7 +9,7 @@
  angular.module('clientApp')
  .directive('smInput', function () {
  	return {
- 		templateUrl: '../../views/directives/sm-input.html',
+ 		templateUrl: '../../views/directives/sminput.html',
  		replace: true,
  		restrict: 'E',
  		scope: {
