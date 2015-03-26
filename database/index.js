@@ -1,30 +1,71 @@
-var mongoose = require( 'mongoose' );
-var dbURI = 'mongodb://wasfi:mongopass@ds039211.mongolab.com:39211/supamarket';
-var UserModel = require('./schemas/users');
+var Sequelize = require('sequelize');
 
-mongoose.connect(dbURI);
+var sequelize = new Sequelize('mysql://vmg39id2c3aki0jr:wnua547bm1zuerms@t6xm9fde86ceioyy.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/heroku_app_db');
 
-mongoose.connection.on('connected', function () {
-  console.log('Mongoose default connection open to ' + dbURI);
+var SVCategory = sequelize.define('SVCategory', {
+  id: { type: Sequelize.INTEGER, unique: true },
+  name: Sequelize.STRING,
+  parent_id: Sequelize.INTEGER,
+  priority: Sequelize.INTEGER,
+  children_count: { type: Sequelize.INTEGER, defaultValue: 0 }
+}, {
+  paranoid: true,
+  underscored: true,
+  tableName: 'sv_categories',
+  timestamps: true
 });
 
-mongoose.connection.on('error', function (err) {
-  console.log('Mongoose default connection error: ' + err);
+var SVProduct = sequelize.define('SVProduct', {
+  id: { type: Sequelize.INTEGER, unique: true },
+  name: Sequelize.STRING,
+  cat_id: Sequelize.INTEGER,
+  small_image: Sequelize.STRING,
+  med_image: Sequelize.STRING,
+  lrg_image: Sequelize.STRING,
+  type: Sequelize.INTEGER,
+  unit_price: Sequelize.FLOAT,
+  unit_measure: Sequelize.STRING,
+  price_desc: Sequelize.STRING,
+  qty: Sequelize.INTEGER,
+  note: Sequelize.STRING,
+  favourite: Sequelize.STRING,
+  promo_text: Sequelize.STRING,
+  promo_desc: Sequelize.STRING,
+  promo_id: Sequelize.INTEGER,
+  promo_count: Sequelize.INTEGER,
+  promo_grp_id: Sequelize.INTEGER,
+  promo_grp_name: Sequelize.STRING,
+  promo_start: Sequelize.DATE,
+  promo_end: Sequelize.DATE
+}, {
+  paranoid: true,
+  underscored: true,
+  tableName: 'sv_products',
+  timestamps: true
 });
 
-mongoose.connection.on('disconnected', function () {
-  console.log('Mongoose default connection disconnected');
+SVCategory.belongsTo(SVCategory, {
+  as: 'Parent',
+  foreignKey: 'parent_id'
 });
 
-mongoose.connection.on('open', function () {
-  console.log('Mongoose default connection is open');
+SVCategory.hasMany(SVCategory, {
+  as: 'Children',
+  foreignKey: 'parent_id'
 });
 
-process.on('SIGINT', function() {
-  mongoose.connection.close(function () {
-    console.log('Mongoose default connection disconnected through app termination');
-    process.exit(0);
-  });
+SVProduct.belongsTo(SVCategory, {
+  as: 'Category',
+  foreignKey: 'cat_id'
 });
 
-exports.users = UserModel;
+SVCategory.hasMany(SVProduct, {
+  as: 'Products',
+  foreignKey: 'id'
+});
+
+SVCategory.sync();
+SVProduct.sync();
+
+exports.SVCategory = SVCategory;
+exports.SVProduct = SVProduct;

@@ -1,10 +1,10 @@
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var db = require('./database');
+var compress = require('compression');
+
+require('./database');
 
 var app = express();
 
@@ -12,12 +12,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compress());
 
 if (app.get('env') == 'production') {
-    app.use(express.static(path.join(__dirname, '/dist')));
+    app.use(express.static(__dirname + '/dist'));
 }
-
-var router = require('./router')(app);
 
 app.use(function (req, res, next) {
 	console.log('Setting Allow Origin');
@@ -38,4 +37,5 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
 });
 
+require('./router')(app);
 module.exports = app;
