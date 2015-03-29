@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var helper = require('../../helper/supervalu');
-var SVCategory = require('../../database').SVCategory;
-var SVProduct = require('../../database').SVProduct;
+var SuperValuCategory = require('../../database').SuperValuCategory;
+var SuperValuProduct = require('../../database').SuperValuProduct;
 
 router.get('/pullproducts',
 	function (req, res, next) {
@@ -35,7 +35,7 @@ router.get('/pullproducts',
 				});
 			});
 			req.svCategories = cats;
-			SVCategory.bulkCreate(cats, {updateOnDuplicate: ['updated_at']}).then(function(){
+			SuperValuCategory.bulkCreate(cats, {updateOnDuplicate: ['updated_at']}).then(function(){
 				next();
 			}).error(function(err){
 				res.status(500).send(err);
@@ -79,44 +79,13 @@ router.get('/pullproducts',
 						promo_end: product.PromotionEndDate
 					});
 				});
-				SVProduct.bulkCreate(products, {updateOnDuplicate: ['updated_at']}).then(function(){
+				SuperValuProduct.bulkCreate(products, {updateOnDuplicate: ['updated_at']}).then(function(){
 					next();
 				}).error(function(err){
 					res.status(500).send(err);
 				});
 			});
 		});
-<<<<<<< HEAD
-	});
-
-	svReq.on('error', function(e) {
-		console.log(e);
-		res.status(500).send("error connecting to " + path);
-	});
-
-	svReq.write(dataString);
-	svReq.end();
-};
-
-router.get('/pullproducts',
-	function (req, res, next) {
-		var username, password;
-		var fs = require('fs');
-		fs.readFile('./private/supervalu.txt', function(err, content) {
-		    if(err){
-		    	res.status(500).send(err);
-		    }
-		    var credentials = content.toString().split('|');
-		    username = credentials[0];
-		    password = credentials[1];
-		    path = '/API/2/Session.asmx/Login';
-			data = {"pwd":password,
-					"userEmail":username,
-					"appKey":"72c62b26-9892-456b-ae34-b4fcee776a7d"};
-			next();
-		});
-=======
->>>>>>> origin/Supervalue-API
 	},
 	function(req, res, next) {
 		var path = '/API/2/Session.asmx/Logout';
@@ -130,7 +99,7 @@ router.get('/pullproducts',
 
 router.get('/getparent/:id',
 	function (req, res, next) {
-		SVCategory.findOne(req.params.id).then(function (instance){
+		SuperValuCategory.findOne(req.params.id).then(function (instance){
 			instance.getParent().then(function (parent){
 				res.json(parent);
 			});
@@ -140,7 +109,7 @@ router.get('/getparent/:id',
 
 router.get('/getchildren/:id',
 	function (req, res, next) {
-		SVCategory.findOne(req.params.id).then(function (instance){
+		SuperValuCategory.findOne(req.params.id).then(function (instance){
 			instance.getChildren().then(function (children){
 				res.json(children);
 			});

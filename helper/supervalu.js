@@ -10,7 +10,7 @@ var apiRequest = function(path, data, callback){
 		'Content-Length': dataString.length
 	};
 	var options = {
-		hostname: 'shop.supervalu.ie',
+		hostname: 'www.shop.supervalu.ie',
 		path: path,
 		method: 'POST',
 		headers: headers
@@ -33,7 +33,7 @@ var apiRequest = function(path, data, callback){
 				else callback(null, "response.d not found");
 			}
 			catch(err){
-				callback(null, "not a JSON response")
+				callback(null, "not a JSON response");
 			};
 		});
 	});
