@@ -10,17 +10,17 @@ angular.module('clientApp')
 		url: '/',
 		templateUrl: '/views/home/main.html',
 		controller: 'HomeCtrl',
-		abstract: true
+		redirectTo: 'home.location'
 	})
 	.state('about', {
 		url: '/about',
 		templateUrl: '/views/about/main.html',
-		abstract: true
+		redirectTo: 'about.theApp'
 	})
 	.state('profile', {
 		url: '/profile',
 		templateUrl: '/views/profile/main.html',
-		abstract: true
+		redirectTo: 'profile.details'
 	})
 	.state('signup', {
 		url: '/signup',
@@ -79,5 +79,14 @@ angular.module('clientApp')
 		url: '/edit',
 		templateUrl: '/views/profile/details-edit.html'
 	});
-
+}])
+.run(['$rootScope', '$state', function run($rootScope, $state) {
+	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
+		if (to.redirectTo) {
+			evt.preventDefault();
+			$state.go(to.redirectTo, params);
+		}
+	});
 }]);
+
+
