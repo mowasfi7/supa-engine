@@ -2,7 +2,6 @@
 
 angular.module('clientApp')
 .config(['$stateProvider', '$urlRouterProvider',function($stateProvider, $urlRouterProvider) {
-
 	$urlRouterProvider.otherwise('/notfound');
 
 	$stateProvider
@@ -81,6 +80,7 @@ angular.module('clientApp')
 	});
 }])
 .run(['$rootScope', '$state', function run($rootScope, $state) {
+	// https://github.com/angular-ui/ui-router/issues/1584#issuecomment-75137373
 	$rootScope.$on('$stateChangeStart', function(evt, to, params) {
 		if (to.redirectTo) {
 			evt.preventDefault();
