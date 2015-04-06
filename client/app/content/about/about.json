@@ -1,0 +1,29 @@
+{
+	"items":[
+		{
+			"name": "theapp",
+			"title": "The Application",
+			"image": "Fruit-and-vegetables.jpg",
+			"content": "theapp.md"
+		},
+		{
+			"name": "amanda",
+			"title": "Amanda Durkan",
+			"image": "amanda.jpg",
+			"content": "amanda.md"
+		},
+		{
+			"name": "wasfi",
+			"title": "Mohamed Wasfi",
+			"image": "wasfi.jpg",
+			"content" : "wasfi.md"
+		},
+		{
+			"name": "marco",
+			"title": "Marco Tsitselis",
+			"image": "marco.jpg",
+			"content": "marco.md"
+		}
+	]
+
+}
