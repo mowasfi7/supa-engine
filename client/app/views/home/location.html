@@ -10,13 +10,9 @@
 <a class="btn btn-lg btn-block btn-info" ng-show="supportsGeo" ng-hide="formData.location.lat" ng-click="getGeoLocation()" href="#" role="button">
 	<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Or let us find your location
 </a>
-<p ng-hide="!statusMessage" class="alert alert-info errormessage" >
-	<span class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></span> {{statusMessage}}
-</p>
-<p ng-hide="errormessage === null" ng-hide="formData.location.lat" class="alert alert-danger errormessage" >
-	<span class="glyphicon glyphicon-alert" aria-hidden="true"></span> {{errormessage}}
-</p>
 <a ui-sref="home.shoppinglist" ng-show="formData.location.lat" class="btn btn-lg btn-block btn-primary">
 	Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
 </a>
+
+<div flash-message="0" class="flash-message"></div>
 <!-- end home/location.html -->

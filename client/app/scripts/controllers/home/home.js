@@ -8,7 +8,7 @@
  * Controller of the clientApp
  */
  angular.module('clientApp')
- .controller('HomeCtrl', function ($scope, $http, $window, Geocode) {
+ .controller('HomeCtrl', function ($scope, $http, $window, Geocode, Flash) {
 
  	// http://tranquil-tundra-3993.herokuapp.com/supapi
 
@@ -16,7 +16,6 @@
     $scope.formData = {};
 
     $scope.supportsGeo = $window.navigator;
-    $scope.errormessage = null;
 
     // function to process the form
     $scope.processForm = function() {
@@ -56,7 +55,8 @@
     // for grabbing the location when the user allows us to
     $scope.getGeoLocation = function() {
 
-    	$scope.statusMessage = 'Determining location...';
+    	//$scope.statusMessage = 'Determining location...';
+    	Flash.create('info', '<span class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></span> Determining location...');
 
     	// using the navigator to get the user's location
     	$window.navigator.geolocation.getCurrentPosition(function(position) {
@@ -65,7 +65,7 @@
     		$scope.$apply(function() {
     			setLocation('', lat, lng);
     			$scope.next = true;
-    			$scope.statusMessage = '';
+    			Flash.dismiss();
     		});
     		return Geocode.reverseGeo(lat, lng)
     		.then(function(response){
@@ -75,20 +75,21 @@
 	    		console.log('Error: ' + error);
 	    	});
     	}, function(error) {
-    		$scope.statusMessage = '';
+    		Flash.dismiss();
+
     		$scope.$apply(function(){
     			switch(error.code) {
     				case error.PERMISSION_DENIED:
-    				$scope.errormessage = 'You denied the request for Geolocation.';
+    				Flash.create('danger', 'You denied the request for Geolocation.');
     				break;
     				case error.POSITION_UNAVAILABLE:
-    				$scope.errormessage = 'Location information is unavailable.';
+    				Flash.create('danger', 'Location information is unavailable.');
     				break;
     				case error.TIMEOUT:
-    				$scope.errormessage = 'The request to get location timed out.';
+    				Flash.create('danger', 'The request to get location timed out.');
     				break;
     				case error.UNKNOWN_ERROR:
-    				$scope.errormessage = 'An unknown error occurred.';
+    				Flash.create('danger', 'An unknown error occurred.');
     				break;
     			}
     		});
