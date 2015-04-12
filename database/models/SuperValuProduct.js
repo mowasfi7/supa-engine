@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('SVProduct', {
+  return sequelize.define('SuperValuProduct', {
 		id: { type: DataTypes.INTEGER, unique: true },
 		name: DataTypes.STRING,
 		cat_id: DataTypes.INTEGER,

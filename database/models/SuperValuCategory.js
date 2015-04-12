@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('SVCategory', {
+  return sequelize.define('SuperValuCategory', {
 		id: { type: DataTypes.INTEGER, unique: true },
 		name: DataTypes.STRING,
 		parent_id: DataTypes.INTEGER,

@@ -2,11 +2,9 @@ var Sequelize = require('sequelize');
 
 var sequelize = new Sequelize('mysql://vmg39id2c3aki0jr:wnua547bm1zuerms@t6xm9fde86ceioyy.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/heroku_app_db');
 
-console.log(__dirname);
-
 var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory');
 var SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct');
-var TSCategory = sequelize.import(__dirname + '\\models\\TescoCategory');
+var TescoCategory = sequelize.import(__dirname + '\\models\\TescoCategory');
 
 SuperValuCategory.belongsTo(SuperValuCategory, {
   as: 'Parent',
@@ -30,6 +28,8 @@ SuperValuCategory.hasMany(SuperValuProduct, {
 
 SuperValuCategory.sync();
 SuperValuProduct.sync();
+TescoCategory.sync();
 
 exports.SuperValuCategory = SuperValuCategory;
 exports.SuperValuProduct = SuperValuProduct;
+exports.TescoCategory = TescoCategory;

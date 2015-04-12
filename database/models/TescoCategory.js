@@ -1,14 +1,12 @@
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('SVCategory', {
+  return sequelize.define('TescoCategory', {
 		id: { type: DataTypes.INTEGER, unique: true },
 		name: DataTypes.STRING,
-		parent_id: DataTypes.INTEGER,
-	  	priority: DataTypes.INTEGER,
-	  	children_count: { type: DataTypes.INTEGER, defaultValue: 0 }
+		parent_id: DataTypes.INTEGER
 	}, {
 		paranoid: true,
 		underscored: true,
-		tableName: 'sv_categories',
+		tableName: 'ts_categories',
 		timestamps: true
 	});
 }

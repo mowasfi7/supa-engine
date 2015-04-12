@@ -17,9 +17,11 @@ var apiRequest = function(path, data, callback){
 	};
 	var svReq = http.request(options, function(svRes) {
 		var responseString = '';
+
 		svRes.on('data', function(data) {
 			responseString += data;
 		});
+
 		svRes.on('end', function() {
 			try{
 				response = JSON.parse(responseString);
@@ -38,8 +40,8 @@ var apiRequest = function(path, data, callback){
 		});
 	});
 
-	svReq.on('error', function(e) {
-		callback(null, "error connecting to " + path);
+	svReq.on('error', function(err) {
+		callback(null, err);
 	});
 
 	svReq.write(dataString);
