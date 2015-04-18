@@ -1,9 +1,9 @@
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('SuperValuCategory', {
-		id: { type: DataTypes.INTEGER, unique: true },
+		id: { type: DataTypes.INTEGER.UNSIGNED, unique: true },
 		name: DataTypes.STRING,
-		parent_id: DataTypes.INTEGER,
-	  	priority: DataTypes.INTEGER,
+		parent_id: DataTypes.INTEGER.UNSIGNED,
+	  	priority: DataTypes.INTEGER.UNSIGNED,
 	  	children_count: { type: DataTypes.INTEGER, defaultValue: 0 }
 	}, {
 		paranoid: true,

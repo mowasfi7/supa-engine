@@ -1,8 +1,8 @@
-var http = require('http');
-var color = require('cli-color');
-var Q = require('q');
-var SuperValuCategory = require('../database').SuperValuCategory;
-var SuperValuProduct = require('../database').SuperValuProduct;
+var http = require('http'),
+	color = require('cli-color'),
+	Q = require('q'),
+	SuperValuCategory = require('../database').SuperValuCategory,
+	SuperValuProduct = require('../database').SuperValuProduct;
 
 
 exports.fire = function(){
@@ -61,7 +61,7 @@ exports.fire = function(){
 					"filter":null,
 					"sessionKey":sessionKey,
 					"listFrom":""};
-		return pullProducts(path, data, categories.slice(0, 2), [], Q.defer());
+		return pullProducts(path, data, categories, [], Q.defer());
 	})
 	.then(function(result){
 		var products = [];
@@ -98,17 +98,20 @@ exports.fire = function(){
 		return apiRequest(path, data);
 	})
 	.catch(function(error){
-		return error;
+		console.error(error);
+		var deferred = Q.defer();
+		deferred.reject(error);
+		return deferred.promise;
 	});
 }
 
 function apiRequest(path, data){
-	console.log(color.cyan("Got a SV request for: " + path));
+	console.log(color.cyan("Got a SuperValue request for: " + path));
 	var deferred = Q.defer();
 	var dataString = JSON.stringify(data);
 	var headers = {
 		'Content-Type': 'application/json',
-		'Accept-Encoding': 'gzip',
+		'Accept-Encoding': 'gzip,deflate',
 		'Content-Length': dataString.length
 	};
 	var options = {
@@ -129,7 +132,7 @@ function apiRequest(path, data){
 				response = JSON.parse(responseString);
 				if(response.d){
 					if(response.d.ResponseCode == 0){
-						console.log(color.green("Returning SV response for: " + path));
+						console.log(color.green("Returning SuperValu response for: " + path));
 						deferred.resolve(response.d);
 					}
 					else deferred.reject(response.d.ResponseInfo);

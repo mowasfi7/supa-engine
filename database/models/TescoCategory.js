@@ -1,8 +1,8 @@
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('TescoCategory', {
-		id: { type: DataTypes.INTEGER, unique: true },
+		id: { type: DataTypes.INTEGER.UNSIGNED, unique: true },
 		name: DataTypes.STRING,
-		parent_id: DataTypes.INTEGER
+		parent_id: DataTypes.INTEGER.UNSIGNED
 	}, {
 		paranoid: true,
 		underscored: true,

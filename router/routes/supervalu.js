@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var engine = require('../../engine/supervalu');
+var express = require('express'),
+	router = express.Router(),
+	engine = require('../../engine/supervalu');
 
 router.get('/pullproducts',
 	function (req, res, next) {
