@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('mysql://vmg39id2c3aki0jr:wnua547bm1zuerms@t6xm9fde86ceioyy.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/heroku_app_db');
+var sequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true');
 
 var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory'),
     SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct'),
