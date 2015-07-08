@@ -13,17 +13,17 @@ exports.fire = function(callback){
 		return TescoCategory.bulkCreate(list, {updateOnDuplicate: ['updated_at']});
 	})
 	.then(function(result){
-		return politePullCategoriesNGroups(list.splice(0, 10), [], Q.defer());
+		return politePullCategoriesNGroups(list.splice(0, 1), [], Q.defer());
 	})
 	.then(function(result){
 		list = parseCategoriesNGroups(result);
 		return TescoCategory.bulkCreate(list.categories.concat(list.groups), {updateOnDuplicate: ['updated_at']});
 	})
 	.then(function(result){
-		return politePullProductLinks(list.groups.splice(0, 10), 1, [], Q.defer());
+		return politePullProductLinks(list.groups.splice(0, 1), 1, [], Q.defer());
 	})
 	.then(function(result){
-		return politePullProductDetails(result, [], Q.defer());
+		return politePullProductDetails(result.splice(0, 20), [], Q.defer());
 	})
 	.then(function(result){
 		list = parseProducts(result);
@@ -235,8 +235,7 @@ function politePullProductDetails(prodLinks, productDumps, deferred){
 		console.log(color.yellow(prodLinks.length + " products remaining "));
 		apiRequest(prodLinks[0].link)
 		.then(function(result){
-			$ = cheerio.load(result);
-			prodLinks[0].dump = $('#contentMain');
+			prodLinks[0].dump = result;
 			productDumps.push(prodLinks[0]);
 			prodLinks.splice(0, 1);
 			politePullProductDetails(prodLinks, productDumps, deferred);
@@ -251,6 +250,21 @@ function politePullProductDetails(prodLinks, productDumps, deferred){
 
 function parseProducts(productDumps){
 	productDumps.forEach(function(productDump){
-		console.log(productDump.dump.children('.productDetailsContainer')['0'].children[1].children[0].children[0].data);
+		$ = cheerio.load(productDump.dump);
+		console.log($('.productDetails').get(0).children[0].children[0].data.trim());
+		console.log($('.linePrice').get(0).children[0].data.trim());
+		console.log($('.linePriceAbbr').get(0).children[0].data.trim());
+		console.log($('.promoBox').text().trim());
+		console.log($('.productDetailsContainer').last().html().trim());
+		if($('.imageColumn').get(0).children[0].name == 'ul'){
+			$('.imageColumn').get(0).children[0].children.forEach(function(li){
+				console.log(li.children[0].attribs.src);
+			});
+		}
+		else if ($('.imageColumn').get(0).children[0].name == 'p'){
+			console.log($('.imageColumn').get(0).children[0].children[0].attribs.src);
+		}
+
+		console.log("==========")
 	});
 }
