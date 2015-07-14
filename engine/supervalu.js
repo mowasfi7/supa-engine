@@ -14,7 +14,7 @@ exports.fire = function(){
 		return pullNInsertCategories(sessionKey);
 	})
 	.then(function(result){
-		return pullNInsertProducts(sessionKey, result.splice(0, 100), [], Q.defer());
+		return pullNInsertProducts(sessionKey, result, [], Q.defer());
 	})
 	.then(function(result){
 		return logout(sessionKey);
@@ -113,7 +113,8 @@ function pullNInsertCategories(sessionKey){
 				id: cat.CategoryID,
 				name: cat.CategoryName,
 				parent_id: cat.ParentID == 0 ? null : cat.ParentID,
-				priority: cat.Priority
+				priority: cat.Priority,
+				children_count: 0
 			});
 		});
 		SuperValuCategory.bulkCreate(categories, {updateOnDuplicate: ['name', 'parent_id', 'updated_at']})
@@ -181,28 +182,20 @@ function pullNInsertProducts(sessionKey, cats, rawProducts, deferred){
 				unit_measure: product.UnitOfMeasure,
 				price_desc: product.PriceDesc,
 				promo_text: product.PromotionBulletText,
-				promo_desc: product.PromoDesc,
-				promo_id: product.PromotionID,
-				promo_count: product.PromotionCountProducts,
-				promo_grp_id: product.PromotionGroupID,
-				promo_grp_name: product.PromotionGroupName,
+				promo_desc: product.PromoDesc
 			});
 		});
 		SuperValuProduct.bulkCreate(parsedProducts, {updateOnDuplicate: [
-			'name', 
-			'cat_id', 
-			'small_image', 
-			'med_image', 
-			'lrg_image', 
-			'unit_price', 
-			'unit_measure', 
-			'price_desc', 
-			'promo_text', 
-			'promo_desc', 
-			'promo_id', 
-			'promo_count', 
-			'promo_grp_id', 
-			'promo_grp_name', 
+			'name',
+			'cat_id',
+			'small_image',
+			'med_image',
+			'lrg_image',
+			'unit_price',
+			'unit_measure',
+			'price_desc',
+			'promo_text',
+			'promo_desc',
 			'updated_at'
 		]})
 		.then(function(result){

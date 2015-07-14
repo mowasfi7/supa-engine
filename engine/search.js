@@ -17,9 +17,12 @@ exports.fire = function(keyword){
 		fns.push(searchTesco(kw));
 	})
 
+	console.log(color.cyan("Searching for " + keywords));
+
 	Q.all(fns)
 	.then(function(result){
 		var products = [].concat.apply([], result);
+		console.log(color.green("Returning " + products.length + " results"));
 		deferred.resolve(products);
 	})
 	return deferred.promise;

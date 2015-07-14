@@ -21,11 +21,14 @@ exports.fire = function(callback){
 		return TescoCategory.bulkCreate(list.categories.concat(list.groups), {updateOnDuplicate: ['name', 'parent_id', 'updated_at']});
 	})
 	.then(function(result){
-		return politePullProductLinks(list.groups.splice(0, 50), 1, [], Q.defer());
+		return politePullProductLinks(list.groups, 1, [], Q.defer());
 	})
 	.then(function(result){
 		list = [];
 		return politePullProductDetails(result, [], Q.defer());
+	})
+	.then(function(result){
+		console.log("Done");
 	})
 	.catch(function(error){
 		console.error(error);
@@ -267,6 +270,7 @@ function politePullProductDetails(prodLinks, productDumps, deferred){
 
 function parseNInsertProducts(productDumps, products, deferred){
 	if(productDumps.length == 0){
+		console.log("Inserting " + products.length + " products");
 		TescoProduct.bulkCreate(products,  {updateOnDuplicate: [
 			'name', 
 			'cat_id', 
@@ -278,7 +282,7 @@ function parseNInsertProducts(productDumps, products, deferred){
 			'updated_at'
 		]})
 		.then(function(result){
-			console.log("Inserted " + result.length + " products from " + products.length);
+			console.log("Inserted " + result.length + " products");
 			deferred.resolve("Done");
 		});
 	}
@@ -293,7 +297,7 @@ function parseNInsertProducts(productDumps, products, deferred){
 			$ = cheerio.load(productDump.dump);
 			product.name = $('.productDetails').get(0).children[0].children[0].data.trim();
 			product.price = $('.linePrice').get(0).children[0].data.trim().replace(/[^\d.-]/g, ''); //removes non-numeric values excluding the dot
-			product.price_desc = $('.linePriceAbbr').get(0).children[0].data.trim();
+			product.price_desc = $('.linePriceAbbr').get(0).children[0].data.trim().replace(/[()]/g, ''); //removes paranthesis
 			product.promo_html = $('.promoBox').html().trim();
 			product.details_html = $('.productDetailsContainer').last().html().trim();
 

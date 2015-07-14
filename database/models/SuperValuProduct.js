@@ -10,11 +10,7 @@ module.exports = function(sequelize, DataTypes) {
 		unit_measure: DataTypes.STRING,
 		price_desc: DataTypes.STRING,
 		promo_text: DataTypes.STRING,
-		promo_desc: DataTypes.STRING,
-		promo_id: DataTypes.INTEGER.UNSIGNED,
-		promo_count: DataTypes.INTEGER.UNSIGNED,
-		promo_grp_id: DataTypes.INTEGER.UNSIGNED,
-		promo_grp_name: DataTypes.STRING
+		promo_desc: DataTypes.STRING
 	}, {
 		paranoid: true,
 		underscored: true,
