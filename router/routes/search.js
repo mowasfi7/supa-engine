@@ -1,10 +1,10 @@
 var express = require('express'),
 	router = express.Router(),
-	engine = require('../../engine/supervalu');
+	engine = require('../../engine/search');
 
-router.get('/pullproducts',
+router.get('/:keyword',
 	function (req, res, next) {
-		engine.fire()
+		engine.fire(req.params.keyword)
 		.then(function(result){
 			res.json(result);
 		})
