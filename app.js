@@ -1,5 +1,4 @@
 var express = require('express'),
-    logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     compress = require('compression');
@@ -8,7 +7,6 @@ require('./database');
 
 var app = express();
 
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
