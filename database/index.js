@@ -2,10 +2,20 @@ var Sequelize = require('sequelize');
 
 var sequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true', {logging: false});
 
-var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory'),
-    SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct'),
-    TescoCategory = sequelize.import(__dirname + '\\models\\TescoCategory'),
-    TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct');
+if(__dirname.substring(0, 3) == 'C:\\'){
+  var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory'),
+      SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct'),
+      TescoCategory = sequelize.import(__dirname + '\\models\\TescoCategory'),
+      TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct');
+}
+else{ //For heroku
+  var SuperValuCategory = sequelize.import(__dirname + '/models/SuperValuCategory'),
+      SuperValuProduct = sequelize.import(__dirname + '/models/SuperValuProduct'),
+      TescoCategory = sequelize.import(__dirname + '/models/TescoCategory'),
+      TescoProduct = sequelize.import(__dirname + '/models/TescoProduct');
+}
+
+
 
 SuperValuCategory.belongsTo(SuperValuCategory, {
   as: 'Parent',
