@@ -2,7 +2,7 @@ var http = require('follow-redirects').http,
 	cheerio = require('cheerio'),
 	color = require('cli-color'),
 	Q = require('q'),
-	zlib = require("zlib"),
+	zlib = require('zlib'),
 	TescoCategory = require('../database').TescoCategory,
 	TescoProduct = require('../database').TescoProduct;
 
@@ -29,9 +29,9 @@ exports.fire = function(callback){
 	})
 	.catch(function(error){
 		console.error(error);
-		// var deferred = Q.defer();
-		// deferred.reject(error);
-		// return deferred.promise;
+		var deferred = Q.defer();
+		deferred.reject(error);
+		return deferred.promise;
 	});
 };
 
@@ -45,10 +45,6 @@ function apiRequest(path, url){
 	};
 
 	var options = {
-		//host: '122.89.128.122',
-		//host: 'localhost',
-		//port: 7474,
-		//path: 'http://www.tesco.ie/' + path,
 		hostname: 'www.tesco.ie',
 		path: path,
 		method: url ? 'POST' : 'GET',

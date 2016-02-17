@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "SET NODE_ENV=production&SET DEBUG=server&start chrome http://localhost:3000&nodemon bin/www",
-    "test": "SET NODE_ENV=development&SET DEBUG=server&nodemon bin/www"
+    "start": "NODE_ENV=production DEBUG=server nodemon bin/www",
+    "test": "NODE_ENV=development DEBUG=server nodemon bin/www"
   },
   "dependencies": {
     "body-parser": "^1.10.2",

@@ -2,17 +2,19 @@ var Sequelize = require('sequelize');
 
 var sequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true', {logging: false});
 
-if(__dirname.substring(0, 3) == 'C:\\'){
+if(__dirname.substring(0, 3) == 'C:\\'){  //For windows
   var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory'),
       SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct'),
       TescoCategory = sequelize.import(__dirname + '\\models\\TescoCategory'),
-      TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct');
+      TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct'),
+      AldiProduct = sequelize.import(__dirname + '\\models\\AldiProduct');
 }
-else{ //For heroku
+else{
   var SuperValuCategory = sequelize.import(__dirname + '/models/SuperValuCategory'),
       SuperValuProduct = sequelize.import(__dirname + '/models/SuperValuProduct'),
       TescoCategory = sequelize.import(__dirname + '/models/TescoCategory'),
-      TescoProduct = sequelize.import(__dirname + '/models/TescoProduct');
+      TescoProduct = sequelize.import(__dirname + '/models/TescoProduct'),
+      AldiProduct = sequelize.import(__dirname + '/models/AldiProduct');
 }
 
 
@@ -61,8 +63,10 @@ SuperValuCategory.sync();
 SuperValuProduct.sync();
 TescoCategory.sync();
 TescoProduct.sync();
+AldiProduct.sync();
 
 exports.SuperValuCategory = SuperValuCategory;
 exports.SuperValuProduct = SuperValuProduct;
 exports.TescoCategory = TescoCategory;
 exports.TescoProduct = TescoProduct;
+exports.AldiProduct = AldiProduct;
