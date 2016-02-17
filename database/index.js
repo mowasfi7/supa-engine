@@ -6,13 +6,15 @@ if(__dirname.substring(0, 3) == 'C:\\'){  //For windows
   var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory'),
       SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct'),
       TescoCategory = sequelize.import(__dirname + '\\models\\TescoCategory'),
-      TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct');
+      TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct'),
+      AldiProduct = sequelize.import(__dirname + '\\models\\AldiProduct');
 }
 else{
   var SuperValuCategory = sequelize.import(__dirname + '/models/SuperValuCategory'),
       SuperValuProduct = sequelize.import(__dirname + '/models/SuperValuProduct'),
       TescoCategory = sequelize.import(__dirname + '/models/TescoCategory'),
-      TescoProduct = sequelize.import(__dirname + '/models/TescoProduct');
+      TescoProduct = sequelize.import(__dirname + '/models/TescoProduct'),
+      AldiProduct = sequelize.import(__dirname + '/models/AldiProduct');
 }
 
 
@@ -61,8 +63,10 @@ SuperValuCategory.sync();
 SuperValuProduct.sync();
 TescoCategory.sync();
 TescoProduct.sync();
+AldiProduct.sync();
 
 exports.SuperValuCategory = SuperValuCategory;
 exports.SuperValuProduct = SuperValuProduct;
 exports.TescoCategory = TescoCategory;
 exports.TescoProduct = TescoProduct;
+exports.AldiProduct = AldiProduct;

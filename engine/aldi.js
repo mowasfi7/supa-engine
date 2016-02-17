@@ -2,7 +2,7 @@ var http = require('follow-redirects').http,
 	cheerio = require('cheerio'),
 	color = require('cli-color'),
 	Q = require('q'),
-	zlib = require('zlib');
+	AldiProduct = require('../database').AldiProduct;
 
 exports.fire = function(callback){
 	return apiRequest('/en/site-map')
@@ -10,7 +10,7 @@ exports.fire = function(callback){
 		return parseProductLinks(result);
 	})
 	.then(function(result){
-		return parseProducts(result.splice(0,1), [], Q.defer());
+		return parseNInsertProducts(result, [], Q.defer());
 	})
 	.then(function(result){
 		var deferred = Q.defer();
@@ -63,45 +63,26 @@ function apiRequest(path){
 
 function handleAldiResponse(aldiReq, aldiRes){
 	var deferred = Q.defer();
-	if(aldiRes.headers['content-encoding'] && aldiRes.headers['content-encoding'].toLowerCase().indexOf('gzip') > -1){
-		var buffer = [];
-		var gunzip = zlib.createGunzip();
-		aldiRes.pipe(gunzip);
-		gunzip.on('data', function(data){
-			buffer.push(data.toString());
-		});
-		gunzip.on('end', function(){
-			aldiReq.abort();
-			console.log(color.green("Returning unzipped Aldi response"));
-			deferred.resolve(buffer.join(""));
-		});
-		gunzip.on('error', function(error){
-			console.log(color.red("Feck, zipped response error"));
-			deferred.reject(error);
-		});
-	}
-	else{
-		var responseString = '';
-		aldiRes.on('data', function(data){
-			responseString += data;
-		});
-		aldiRes.on('end', function() {
-			aldiReq.abort();
-			console.log(color.green("Returning Aldi response"));
-			deferred.resolve(responseString);
-		});
-		aldiRes.on('error', function(error) {
-			console.log(color.red("Feck, response error"));
-			deferred.reject(error);
-		});
-	}
+	var responseString = '';
+	aldiRes.on('data', function(data){
+		responseString += data;
+	});
+	aldiRes.on('end', function() {
+		aldiReq.abort();
+		console.log(color.green("Returning Aldi response"));
+		deferred.resolve(responseString);
+	});
+	aldiRes.on('error', function(error) {
+		console.log(color.red("Feck, response error"));
+		deferred.reject(error);
+	});
 	return deferred.promise;
 }
 
 function parseProductLinks(dump){
 	var productLinks = [];
 	$ = cheerio.load(dump);
-	$('a').each(function(i, elem){
+	$('a').each(function(){
 		if($(this).attr('href').indexOf('detail') > -1){
 			productLinks.push($(this).attr('href').substring(19));
 		}
@@ -109,9 +90,23 @@ function parseProductLinks(dump){
 	return productLinks;
 }
 
-function parseProducts(links, products, deferred){
+function parseNInsertProducts(links, products, deferred){
 	if(links.length == 0){
-		console.log(color.green("Returning " + products.length + " products"));
+		console.log(color.yellow("Attempting to insert " + products.length + " Aldi products in the DB"));
+		AldiProduct.bulkCreate(products,  {updateOnDuplicate: [
+			'title', 
+			'images', 
+			'value', 
+			'per', 
+			'detailamount', 
+			'description',
+			'limited'
+		]})
+		.then(function(result){
+			console.log("Inserted " + result.length + " Aldi products from " + products.length);
+			deferred.resolve("Done");
+		});
+		
 		deferred.resolve(products);
 	}
 	else{
@@ -119,17 +114,41 @@ function parseProducts(links, products, deferred){
 		apiRequest(links[0])
 		.then(function(result){
 			$ = cheerio.load(result);
-			/*  */
-			var image = $('.detail-box--image').attr('src');
-			var title = $('.detail-box--price-box--title').data();
-			console.log(title);
-			links.splice(0, 1);
-			parseProducts(links, products, deferred);
+			var limited = links[0].match(/.*specialbuys\/(.*)\/products.*/);
+			var details = {
+				path: links[0].substring(4).replace(/-/g, ' '),
+				title: $('.detail-box--price-box--title').text().trim(),
+				images: $('.detail-box--image').attr('src'),
+				value: $('.box--value').text().trim().replace('€', '') + 
+					   $('.box--decimal').text().trim(),
+				per: $('.box--amount').text().trim(),
+				detailamount: $('.box--detailamount').text().trim(),
+				description: $('.detail-tabcontent').children().length > 0 ? $('.detail-tabcontent').html().trim().replace(/\t/g, '').replace(/\n/g, '').replace(/<h2 class="ym-print">(.*)<\/h2>/, '') : '',
+				limited: limited ? limited[1] : null
+			}
+			if(details.images){
+				products.push(details);
+				links.splice(0, 1);
+			}
+			else if($('.media-gallery').children('img')){
+				var images = "";
+				$('.media-gallery').children('img').each(function(){
+					images += $(this).attr('src') + "|";
+				});
+				details.images = images.slice(0, -1);
+				products.push(details);
+				links.splice(0, 1);
+			}
+			else{
+				console.log(color.red("Incomplete details, let me try again"));	
+			}
+			setTimeout(function(){ parseNInsertProducts(links, products, deferred); }, 500);
+			
 		})
 		.catch(function(error){
 			console.log(color.red("Error parsing " + links[0] + ", let me try again"));
 			setTimeout(function(){
-				parseProducts(links, products, deferred);
+				parseNInsertProducts(links, products, deferred);
 			}, 1000);
 		});
 	}
