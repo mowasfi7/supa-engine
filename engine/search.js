@@ -4,7 +4,8 @@ var http = require('http'),
 	SuperValuCategory = require('../database').SuperValuCategory,
 	SuperValuProduct = require('../database').SuperValuProduct,
 	TescoCategory = require('../database').TescoCategory,
-	TescoProduct = require('../database').TescoProduct;
+	TescoProduct = require('../database').TescoProduct,
+	AldiProduct = require('../database').AldiProduct;
 
 exports.fire = function(keyword){
 	var deferred = Q.defer();
@@ -15,6 +16,7 @@ exports.fire = function(keyword){
 	keywords.forEach(function(kw){
 		fns.push(searchSupervalu(kw));
 		fns.push(searchTesco(kw));
+		fns.push(searchAldi(kw));
 	})
 
 	Q.all(fns)
@@ -107,6 +109,37 @@ function searchTesco(keyword){
 				price_desc: product.price_desc,
 				image: product.images.split('|')[0],
 				category: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
+			});
+		});
+		deferred.resolve(products);
+	});
+	return deferred.promise;
+}
+
+function searchAldi(keyword){
+	var deferred = Q.defer();
+
+	AldiProduct.findAll({
+		attributes: ['path', 'title', 'images', 'value', 'per', 'detailamount', 'description', 'limited'],
+		where: {
+			$or: {
+				path: { like: '%' + keyword + '%' },
+				title: { like: '%' + keyword + '%' }
+			}
+		}
+	})
+	.then(function(result){
+		var products = [];
+		result.forEach(function(product){
+			products.push({
+				store: 'Aldi',
+				keyword: keyword,
+				id: null,
+				name: product.title,
+				price: product.value,
+				price_desc: product.detailamount,
+				image: product.images.split('|')[0],
+				category: product.path
 			});
 		});
 		deferred.resolve(products);
