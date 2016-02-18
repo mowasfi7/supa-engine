@@ -86,7 +86,7 @@ function login(){
 	var deferred = Q.defer();
 	apiRequest('/API/2/Session.asmx/Login',
 				{'pwd' : 'HMsQmP3Wyr+mt',
-				'userEmail' : 'sv_api@sv.ie',
+				'userEmail' : 'svsv@sv.ie',
 				'appKey' : '72c62b26-9892-456b-ae34-b4fcee776a7d'})
 	.then(function(result){
 		deferred.resolve(result.SessionKey);
@@ -104,7 +104,7 @@ function pullNInsertCategories(sessionKey){
 	apiRequest('/API/2/Assortment.asmx/GetCategoryTree',
 				{'type':'N',
 				'cacheDate':'20100101 00:01',
-				'cacheStoreID':1713,
+				'cacheStoreID':309,
 				'sessionKey':sessionKey})
 	.then(function(result){
 		var categories = [];
@@ -113,7 +113,8 @@ function pullNInsertCategories(sessionKey){
 				id: cat.CategoryID,
 				name: cat.CategoryName,
 				parent_id: cat.ParentID == 0 ? null : cat.ParentID,
-				priority: cat.Priority
+				priority: cat.Priority,
+				children_count: 0
 			});
 		});
 		SuperValuCategory.bulkCreate(categories, {updateOnDuplicate: ['name', 'parent_id', 'updated_at']})
