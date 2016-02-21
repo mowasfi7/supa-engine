@@ -1,23 +1,29 @@
 var Sequelize = require('sequelize');
 
-var sequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true', {logging: false});
+var mysequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true', {logging: false});
+var sequelite = new Sequelize(null, null, null, {
+                  host: 'localhost',
+                  dialect: 'sqlite',
+                  storage: __dirname + '/autocomplete.sqlite',
+                  logging: false
+                });
 
 if(__dirname.substring(0, 3) == 'C:\\'){  //For windows
-  var SuperValuCategory = sequelize.import(__dirname + '\\models\\SuperValuCategory'),
-      SuperValuProduct = sequelize.import(__dirname + '\\models\\SuperValuProduct'),
-      TescoCategory = sequelize.import(__dirname + '\\models\\TescoCategory'),
-      TescoProduct = sequelize.import(__dirname + '\\models\\TescoProduct'),
-      AldiProduct = sequelize.import(__dirname + '\\models\\AldiProduct');
+  var SuperValuCategory = mysequelize.import(__dirname + '\\models\\SuperValuCategory'),
+      SuperValuProduct = mysequelize.import(__dirname + '\\models\\SuperValuProduct'),
+      TescoCategory = mysequelize.import(__dirname + '\\models\\TescoCategory'),
+      TescoProduct = mysequelize.import(__dirname + '\\models\\TescoProduct'),
+      AldiProduct = mysequelize.import(__dirname + '\\models\\AldiProduct'),
+      AutoComplete = sequelite.import(__dirname + '\\models\\AutoComplete');
 }
 else{
-  var SuperValuCategory = sequelize.import(__dirname + '/models/SuperValuCategory'),
-      SuperValuProduct = sequelize.import(__dirname + '/models/SuperValuProduct'),
-      TescoCategory = sequelize.import(__dirname + '/models/TescoCategory'),
-      TescoProduct = sequelize.import(__dirname + '/models/TescoProduct'),
-      AldiProduct = sequelize.import(__dirname + '/models/AldiProduct');
+  var SuperValuCategory = mysequelize.import(__dirname + '/models/SuperValuCategory'),
+      SuperValuProduct = mysequelize.import(__dirname + '/models/SuperValuProduct'),
+      TescoCategory = mysequelize.import(__dirname + '/models/TescoCategory'),
+      TescoProduct = mysequelize.import(__dirname + '/models/TescoProduct'),
+      AldiProduct = mysequelize.import(__dirname + '/models/AldiProduct'),
+      AutoComplete = sequelite.import(__dirname + '/models/AutoComplete');
 }
-
-
 
 SuperValuCategory.belongsTo(SuperValuCategory, {
   as: 'Parent',
@@ -64,9 +70,11 @@ SuperValuProduct.sync();
 TescoCategory.sync();
 TescoProduct.sync();
 AldiProduct.sync();
+AutoComplete.sync();
 
 exports.SuperValuCategory = SuperValuCategory;
 exports.SuperValuProduct = SuperValuProduct;
 exports.TescoCategory = TescoCategory;
 exports.TescoProduct = TescoProduct;
 exports.AldiProduct = AldiProduct;
+exports.AutoComplete = AutoComplete;

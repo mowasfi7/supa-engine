@@ -2,7 +2,8 @@ var http = require('follow-redirects').http,
 	cheerio = require('cheerio'),
 	color = require('cli-color'),
 	Q = require('q'),
-	AldiProduct = require('../database').AldiProduct;
+	AldiProduct = require('../database').AldiProduct,
+	AutoComplete = require('../database').AutoComplete;
 
 exports.fire = function(callback){
 	return apiRequest('/en/site-map')
@@ -104,10 +105,22 @@ function parseNInsertProducts(links, products, deferred){
 		]})
 		.then(function(result){
 			console.log("Inserted " + result.length + " Aldi products from " + products.length);
+			products.forEach(function(product, i){
+				products[i] = {product: product.title}
+			});
+			return AutoComplete.bulkCreate(products);
+		})
+		.then(function(result){
+			console.log("Done");
 			deferred.resolve("Done");
+			return deferred.promise;
+		})
+		.catch(function(error){
+			console.error(error);
+			var deferred = Q.defer();
+			deferred.reject(error);
+			return deferred.promise;
 		});
-		
-		deferred.resolve(products);
 	}
 	else{
 		console.log(color.yellow(links.length + " products remaining"));
@@ -116,7 +129,7 @@ function parseNInsertProducts(links, products, deferred){
 			$ = cheerio.load(result);
 			var limited = links[0].match(/.*specialbuys\/(.*)\/products.*/);
 			var details = {
-				path: links[0].substring(4).replace(/-/g, ' '),
+				path: links[0].substring(4).replace(/-/g, ' ').replace(/\//g, '|').replace('product range|', '').replace('products detail page|ps|p|', ''),
 				title: $('.detail-box--price-box--title').text().trim(),
 				images: $('.detail-box--image').attr('src'),
 				value: $('.box--value').text().trim().replace('€', '') + 
@@ -126,8 +139,12 @@ function parseNInsertProducts(links, products, deferred){
 				description: $('.detail-tabcontent').children().length > 0 ? $('.detail-tabcontent').html().trim().replace(/\t/g, '').replace(/\n/g, '').replace(/<h2 class="ym-print">(.*)<\/h2>/, '') : '',
 				limited: limited ? limited[1] : null
 			}
+			if(details.value.indexOf('c') > -1){
+				details.value.replace('c', '');
+				details.value = parseInt(details.value) / 100;
+			}
 			if(details.images){
-				products.push(details);
+				if(details.title.length > 0) products.push(details);
 				links.splice(0, 1);
 			}
 			else if($('.media-gallery').children('img')){
@@ -136,7 +153,7 @@ function parseNInsertProducts(links, products, deferred){
 					images += $(this).attr('src') + "|";
 				});
 				details.images = images.slice(0, -1);
-				products.push(details);
+				if(details.title.length > 0) products.push(details);
 				links.splice(0, 1);
 			}
 			else{
