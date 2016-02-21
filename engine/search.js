@@ -1,6 +1,4 @@
-var http = require('http'),
-	color = require('cli-color'),
-	Q = require('q'),
+var Q = require('q'),
 	SuperValuCategory = require('../database').SuperValuCategory,
 	SuperValuProduct = require('../database').SuperValuProduct,
 	TescoCategory = require('../database').TescoCategory,

@@ -1,9 +1,9 @@
 var router = require('express').Router(),
-	engine = require('../../engine/supervalu');
+	engine = require('../../engine/autocomplete');
 
-router.get('/pullproducts',
+router.get('/:keyword',
 	function (req, res, next) {
-		engine.fire()
+		engine.fire(req.params.keyword)
 		.then(function(result){
 			res.json(result);
 		})

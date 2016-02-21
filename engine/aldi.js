@@ -106,7 +106,7 @@ function parseNInsertProducts(links, products, deferred){
 		.then(function(result){
 			console.log("Inserted " + result.length + " Aldi products from " + products.length);
 			products.forEach(function(product, i){
-				products[i] = {product: product.title}
+				products[i] = {product: product.title.replace('aldi', '').trim()}
 			});
 			return AutoComplete.bulkCreate(products);
 		})

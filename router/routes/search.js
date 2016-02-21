@@ -1,5 +1,4 @@
-var express = require('express'),
-	router = express.Router(),
+var router = require('express').Router(),
 	engine = require('../../engine/search');
 
 router.get('/:keyword',
