@@ -124,8 +124,8 @@ function searchAldi(keyword){
 		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'limited', 'category'],
 		where: {
 			$or: {
-				parents: { like: '%' + keyword + '%' },
-				title: { like: '%' + keyword + '%' }
+				category: { like: '%' + keyword + '%' },
+				name: { like: '%' + keyword + '%' }
 			}
 		}
 	})
@@ -142,7 +142,7 @@ function searchAldi(keyword){
 				measure: product.measure,
 				price_desc: product.price_desc,
 				limited: product.limited,
-				category: product.parents
+				category: product.category
 			});
 		});
 		deferred.resolve(products);
