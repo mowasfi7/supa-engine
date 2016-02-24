@@ -1,6 +1,7 @@
 var http = require('http'),
 	color = require('cli-color'),
 	Q = require('q'),
+	toTitleCase = require('to-title-case'),
 	SuperValuCategory = require('../database').SuperValuCategory,
 	SuperValuProduct = require('../database').SuperValuProduct;
 
@@ -14,7 +15,7 @@ exports.fire = function(){
 		return pullNInsertCategories(sessionKey);
 	})
 	.then(function(result){
-		return pullNInsertProducts(sessionKey, result.splice(0, 100), [], Q.defer());
+		return pullNInsertProducts(sessionKey, result, [], Q.defer());
 	})
 	.then(function(result){
 		return logout(sessionKey);
@@ -173,42 +174,19 @@ function pullNInsertProducts(sessionKey, cats, rawProducts, deferred){
 		rawProducts.forEach(function(product){
 			parsedProducts.push({
 				id: product.ProductID,
-				name: product.ProductName,
+				name: toTitleCase(product.ProductName),
 				cat_id: product.cat_id,
-				small_image: product.SmlImg,
-				med_image: product.MedImg,
-				lrg_image: product.LrgImg,
-				unit_price: product.UnitPrice,
-				unit_measure: product.UnitOfMeasure,
+				image: product.LrgImg,
+				price: product.UnitPrice,
+				measure: product.UnitOfMeasure,
 				price_desc: product.PriceDesc,
-				promo_text: product.PromotionBulletText,
-				promo_desc: product.PromoDesc,
-				promo_id: product.PromotionID,
-				promo_count: product.PromotionCountProducts,
-				promo_grp_id: product.PromotionGroupID,
-				promo_grp_name: product.PromotionGroupName,
+				promo: product.PromotionBulletText ? product.PromotionBulletText : product.PromoDesc
 			});
 		});
-		SuperValuProduct.bulkCreate(parsedProducts, {updateOnDuplicate: [
-			'name', 
-			'cat_id', 
-			'small_image', 
-			'med_image', 
-			'lrg_image', 
-			'unit_price', 
-			'unit_measure', 
-			'price_desc', 
-			'promo_text', 
-			'promo_desc', 
-			'promo_id', 
-			'promo_count', 
-			'promo_grp_id', 
-			'promo_grp_name', 
-			'updated_at'
-		]})
+		SuperValuProduct.bulkCreate(parsedProducts, {updateOnDuplicate: ['name', 'cat_id', 'image', 'price', 'measure', 'price_desc', 'promo', 'updated_at']})
 		.then(function(result){
 			console.log('Inserted ' + result.length + ' products');
-			deferred.resolve('Done');
+			deferred.resolve('SuperValue - Done');
 		});
 	}
 	return deferred.promise;

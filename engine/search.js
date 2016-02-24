@@ -28,7 +28,7 @@ exports.fire = function(keyword){
 function searchSupervalu(keyword){
 	var deferred = Q.defer();
 	SuperValuProduct.findAll({
-		attributes: ['id', 'name', 'unit_price', 'price_desc', 'small_image'],
+		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'promo'],
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -58,9 +58,11 @@ function searchSupervalu(keyword){
 				keyword: keyword,
 				id: product.id,
 				name: product.name,
-				price: product.unit_price,
+				image: product.image,
+				price: product.price,
+				measure: product.measure,
 				price_desc: product.price_desc,
-				image: product.small_image == null ? null : 'http://shop.supervalu.ie/shopping/images/products/small/' + product.small_image,
+				promo: product.promo,
 				category: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
 			});
 		});
@@ -73,7 +75,7 @@ function searchSupervalu(keyword){
 function searchTesco(keyword){
 	var deferred = Q.defer();
 	TescoProduct.findAll({
-		attributes: ['id', 'name', 'price', 'price_desc', 'images'],
+		attributes: ['id', 'name', 'image', 'price', 'price_desc', 'promo'],
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -103,9 +105,10 @@ function searchTesco(keyword){
 				keyword: keyword,
 				id: product.id,
 				name: product.name,
+				image: product.image,
 				price: product.price,
 				price_desc: product.price_desc,
-				image: product.images.split('|')[0],
+				promo: product.promo,
 				category: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
 			});
 		});
@@ -118,10 +121,10 @@ function searchAldi(keyword){
 	var deferred = Q.defer();
 
 	AldiProduct.findAll({
-		attributes: ['path', 'title', 'images', 'value', 'per', 'detailamount', 'description', 'limited'],
+		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'limited', 'category'],
 		where: {
 			$or: {
-				path: { like: '%' + keyword + '%' },
+				parents: { like: '%' + keyword + '%' },
 				title: { like: '%' + keyword + '%' }
 			}
 		}
@@ -132,12 +135,14 @@ function searchAldi(keyword){
 			products.push({
 				store: 'Aldi',
 				keyword: keyword,
-				id: null,
-				name: product.title,
-				price: product.value,
-				price_desc: product.detailamount,
-				image: product.images.split('|')[0],
-				category: product.path
+				id: product.id,
+				name: product.name,
+				image: product.image,
+				price: product.price,
+				measure: product.measure,
+				price_desc: product.price_desc,
+				limited: product.limited,
+				category: product.parents
 			});
 		});
 		deferred.resolve(products);

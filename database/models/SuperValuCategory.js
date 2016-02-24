@@ -4,7 +4,6 @@ module.exports = function(sequelize, DataTypes) {
 		name: DataTypes.STRING,
 		parent_id: DataTypes.INTEGER.UNSIGNED
 	}, {
-		paranoid: true,
 		underscored: true,
 		tableName: 'sv_categories',
 		timestamps: true

@@ -1,11 +1,11 @@
 var Sequelize = require('sequelize');
 
-var mysequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true', {logging: false});
+var mysequelize = new Sequelize('mysql://b1d25f459067c4:892f2bb8@us-cdbr-iron-east-02.cleardb.net/heroku_275eaf3adeef76c?reconnect=true', {logging: console.log});
 var sequelite = new Sequelize(null, null, null, {
                   host: 'localhost',
                   dialect: 'sqlite',
                   storage: __dirname + '/autocomplete.sqlite',
-                  logging: false
+                  logging: console.log
                 });
 
 if(__dirname.substring(0, 3) == 'C:\\'){  //For windows

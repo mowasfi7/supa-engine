@@ -19,11 +19,8 @@ if (app.get('env') == 'production') {
 }
 
 app.use(function (req, res, next) {
-	console.log('Setting Allow Origin');
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5555');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
     next();
 });
 

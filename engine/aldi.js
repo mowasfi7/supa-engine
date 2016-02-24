@@ -2,10 +2,10 @@ var http = require('follow-redirects').http,
 	cheerio = require('cheerio'),
 	color = require('cli-color'),
 	Q = require('q'),
-	AldiProduct = require('../database').AldiProduct,
-	AutoComplete = require('../database').AutoComplete;
+	toTitleCase = require('to-title-case'),
+	AldiProduct = require('../database').AldiProduct;
 
-exports.fire = function(callback){
+exports.fire = function(){
 	return apiRequest('/en/site-map')
 	.then(function(result){
 		return parseProductLinks(result);
@@ -27,7 +27,7 @@ exports.fire = function(callback){
 };
 
 function apiRequest(path){
-	console.log(color.cyan("Got a Aldi request for: " + path));
+	console.log(color.cyan("Got an Aldi request for: " + path));
 	var deferred = Q.defer();
 
 	var headers = {
@@ -94,25 +94,10 @@ function parseProductLinks(dump){
 function parseNInsertProducts(links, products, deferred){
 	if(links.length == 0){
 		console.log(color.yellow("Attempting to insert " + products.length + " Aldi products in the DB"));
-		AldiProduct.bulkCreate(products,  {updateOnDuplicate: [
-			'title', 
-			'images', 
-			'value', 
-			'per', 
-			'detailamount', 
-			'description',
-			'limited'
-		]})
+		AldiProduct.bulkCreate(products, {updateOnDuplicate: ['category', 'name', 'image', 'price', 'measure', 'price_desc', 'limited', 'updated_at']})
 		.then(function(result){
-			console.log("Inserted " + result.length + " Aldi products from " + products.length);
-			products.forEach(function(product, i){
-				products[i] = {product: product.title.replace('aldi', '').trim()}
-			});
-			return AutoComplete.bulkCreate(products);
-		})
-		.then(function(result){
-			console.log("Done");
-			deferred.resolve("Done");
+			console.log("Aldi - Inserted " + result.length + " products");
+			deferred.resolve("Aldi - Done");
 			return deferred.promise;
 		})
 		.catch(function(error){
@@ -127,40 +112,78 @@ function parseNInsertProducts(links, products, deferred){
 		apiRequest(links[0])
 		.then(function(result){
 			$ = cheerio.load(result);
-			var limited = links[0].match(/.*specialbuys\/(.*)\/products.*/);
-			var details = {
-				path: links[0].substring(4).replace(/-/g, ' ').replace(/\//g, '|').replace('product range|', '').replace('products detail page|ps|p|', ''),
-				title: $('.detail-box--price-box--title').text().trim(),
-				images: $('.detail-box--image').attr('src'),
-				value: $('.box--value').text().trim().replace('€', '') + 
-					   $('.box--decimal').text().trim(),
-				per: $('.box--amount').text().trim(),
-				detailamount: $('.box--detailamount').text().trim(),
-				description: $('.detail-tabcontent').children().length > 0 ? $('.detail-tabcontent').html().trim().replace(/\t/g, '').replace(/\n/g, '').replace(/<h2 class="ym-print">(.*)<\/h2>/, '') : '',
-				limited: limited ? limited[1] : null
-			}
-			if(details.value.indexOf('c') > -1){
-				details.value.replace('c', '');
-				details.value = parseInt(details.value) / 100;
-			}
-			if(details.images){
-				if(details.title.length > 0) products.push(details);
+
+			if($('#c94').children('h1').text() == "Unfortunately the requested page could not be found"){
+				console.log(color.red("Missing details, ignoring..."));
 				links.splice(0, 1);
+				setTimeout(function(){ parseNInsertProducts(links, products, deferred); }, 500);
+				return false;
+			}
+			
+			var title = $('.detail-box--price-box--title').text().trim();
+			if(title.length == 0){
+				console.log(color.red("Incomplete details, let me try again"));
+				setTimeout(function(){ parseNInsertProducts(links, products, deferred); }, 500);
+				return false;
+			}
+
+			var images;
+			if($('.detail-box--image').attr('src')){
+				images = $('.detail-box--image').attr('src').replace('https://www.aldi.ie/typo3temp/pics/', '');
 			}
 			else if($('.media-gallery').children('img')){
-				var images = "";
+				images = "";
 				$('.media-gallery').children('img').each(function(){
-					images += $(this).attr('src') + "|";
+					images += $(this).attr('src').replace('https://www.aldi.ie/typo3temp/pics/', '') + "|";
 				});
-				details.images = images.slice(0, -1);
-				if(details.title.length > 0) products.push(details);
-				links.splice(0, 1);
+				images = images.slice(0, -1);
 			}
 			else{
-				console.log(color.red("Incomplete details, let me try again"));	
+				console.log(color.red("Incomplete details, let me try again"));
+				setTimeout(function(){ parseNInsertProducts(links, products, deferred); }, 500);
+				return false;
 			}
-			setTimeout(function(){ parseNInsertProducts(links, products, deferred); }, 500);
+
+			var parents = links[0].substring(4).slice(0, -1)
+					  .replace(/-/g, ' ')
+					  .replace(/\//g, '|')
+					  .replace('product range|', '')
+					  .replace('products detail page|ps|p|', '')
+					  .replace('about aldi|', '');
+			parents = parents.substring(0, parents.lastIndexOf('|'));
 			
+			var value = $('.box--value').text().trim().replace('€', '') + $('.box--decimal').text().trim();
+			if(value.indexOf('c') > -1){
+				value.replace('c', '');
+				value = parseInt(value) / 100;
+			}
+			else{
+				value = parseFloat(value);
+			}
+			
+			var per = $('.box--amount').text().trim();
+			
+			var detailamount = $('.box--detailamount').text().trim();
+			
+			//var description = $('.detail-tabcontent').children().length == 0 ? null : 
+			//				  utils($('.detail-tabcontent').html(), /<h2 class="ym-print">(.*)<\/h2>/);
+			
+			var limited = links[0].match(/.*specialbuys\/(.*)\/products.*/);
+
+			products.push({
+				url: links[0],
+				category: parents,
+				name: toTitleCase(title),
+				image: images.length > 0 ? images : null,
+				price: value > 0 ? value : null,
+				measure: per.length > 0 ? per: null,
+				price_desc: detailamount.length > 0 ? detailamount : null,
+				//description: description.length > 0 ? description : null,
+				limited: limited ? limited[1] : null
+			});
+
+			links.splice(0, 1);
+			setTimeout(function(){ parseNInsertProducts(links, products, deferred); }, 500);
 		})
 		.catch(function(error){
 			console.log(color.red("Error parsing " + links[0] + ", let me try again"));

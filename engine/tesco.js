@@ -3,25 +3,27 @@ var http = require('follow-redirects').http,
 	color = require('cli-color'),
 	Q = require('q'),
 	zlib = require('zlib'),
+	toTitleCase = require('to-title-case'),
+	utils = require('../engine/utils'),
 	TescoCategory = require('../database').TescoCategory,
 	TescoProduct = require('../database').TescoProduct;
 
-exports.fire = function(callback){
+exports.fire = function(){
 	var list = [];
 	return apiRequest('/groceries')
 	.then(function(result){
-		list = parseDepartments(result).splice(0, 1);
+		list = parseDepartments(result);
 		return TescoCategory.bulkCreate(list, {updateOnDuplicate: ['name', 'parent_id', 'updated_at']});
 	})
 	.then(function(result){
-		return politePullCategoriesNGroups(list, [], Q.defer());
+		return politePullCategoriesNGroups(list.splice(0,1), [], Q.defer());
 	})
 	.then(function(result){
 		list = parseCategoriesNGroups(result);
-		return TescoCategory.bulkCreate(list.categories.concat(list.groups), {updateOnDuplicate: ['name', 'parent_id', 'updated_at']});
+		return TescoCategory.bulkCreate(list.categories.concat(list.groups.splice(0,1)), {updateOnDuplicate: ['name', 'parent_id', 'updated_at']});
 	})
 	.then(function(result){
-		return politePullProductLinks(list.groups.splice(0, 50), 1, [], Q.defer());
+		return politePullProductLinks(list.groups, 1, [], Q.defer());
 	})
 	.then(function(result){
 		list = [];
@@ -235,13 +237,13 @@ function politePullProductDetails(prodLinks, productDumps, deferred){
 		deferred.resolve(productDumps);
 	}
 	else{
-		console.log(color.yellow(prodLinks.length + " products remaining "));
 		apiRequest(prodLinks[0].link)
 		.then(function(result){
 			prodLinks[0].dump = result;
 			productDumps.push(prodLinks[0]);
 			prodLinks.splice(0, 1);
-			if(productDumps.length == 1000 || prodLinks.length == 0){
+			console.log(color.yellow("Pulled " + productDumps.length + " and " + prodLinks.length + " remaining"));
+			if(productDumps.length >= 100 || prodLinks.length == 0){
 				parseNInsertProducts(productDumps, [], Q.defer())
 				.then(function(result){
 					if(prodLinks.length > 0) politePullProductDetails(prodLinks, [], deferred);
@@ -263,48 +265,51 @@ function politePullProductDetails(prodLinks, productDumps, deferred){
 
 function parseNInsertProducts(productDumps, products, deferred){
 	if(productDumps.length == 0){
-		TescoProduct.bulkCreate(products,  {updateOnDuplicate: [
-			'name', 
-			'cat_id', 
-			'images', 
-			'price', 
-			'price_desc', 
-			'details_html', 
-			'promo_html', 
-			'updated_at'
-		]})
+		TescoProduct.bulkCreate(products,  {updateOnDuplicate: ['name', 'cat_id', 'image', 'price', 'price_desc', 'promo', 'updated_at']})
 		.then(function(result){
-			console.log("Inserted " + result.length + " products from " + products.length);
-			deferred.resolve("Done");
+			console.log("Inserted " + products.length + " products");
+			deferred.resolve("Tesco - Done");
 		});
 	}
 	else{
 		var productDump = productDumps[0];
-		var product = {};
-		var idRegex = /id=(.*)/;
-		product.id = idRegex.exec(productDump.link)[1];
-		product.cat_id = productDump.groupID;
+		var id = /id=(.*)/.exec(productDump.link)[1];
+		var cat_id = productDump.groupID;
 
 		try{
 			$ = cheerio.load(productDump.dump);
-			product.name = $('.productDetails').get(0).children[0].children[0].data.trim();
-			product.price = $('.linePrice').get(0).children[0].data.trim().replace(/[^\d.-]/g, ''); //removes non-numeric values excluding the dot
-			product.price_desc = $('.linePriceAbbr').get(0).children[0].data.trim();
-			product.promo_html = $('.promoBox').html().trim();
-			product.details_html = $('.productDetailsContainer').last().html().trim();
+			var name = $('.productDetails').get(0).children[0].children[0].data.trim();
+			var price = $('.linePrice').get(0).children[0].data.trim().replace(/[^\d.-]/g, ''); //removes non-numeric values excluding the dot
+			var price_desc = $('.linePriceAbbr').get(0).children[0].data.trim()
+							 .replace(/[()]/g, '')
+							 .replace('/each', ' each')
+							 .replace('/', ' per ');
 
+			var promo_html = utils.htmlSlim($('.promoBox').html());
+			//var details_html = utils.htmlSlim($('.productDetailsContainer').last().html());
+			
+			var images = null;
 			if($('.imageColumn').children('ul').get(0)){
 				var imagesDump = "";
 				$('.imageColumn').children('ul').get(0).children.forEach(function(li){
 					imagesDump += li.children[0].attribs.src + "||";
 				});
-				product.images = imagesDump.slice(0, -2);
+				images = imagesDump.slice(0, -2);
 			}
 			else if ($('.imageColumn').children('p').get(0)){
-				product.images = $('.imageColumn').children('p').get(0).children[0].attribs.src;
+				images = $('.imageColumn').children('p').get(0).children[0].attribs.src;
 			}
 
-			products.push(product);
+			products.push({
+				id: id,
+				cat_id: cat_id,
+				name: toTitleCase(name),
+				images: images,
+				price: price,
+				price_desc: price_desc,
+				promo_html: promo_html.length > 0 ? promo_html : null
+				//details_html: details_html.length > 0 ? details_html : null
+			});
 		}
 		catch(error){
 			console.log(product.id);
