@@ -5,16 +5,16 @@ var Q = require('q'),
 	TescoProduct = require('../database').TescoProduct,
 	AldiProduct = require('../database').AldiProduct;
 
-exports.fire = function(keyword){
+exports.fire = function(req){
 	var deferred = Q.defer();
-	var keywords = keyword.split('|');
+	var keywords = req.keyword.split('|');
 
 	var fns = [];
 
 	keywords.forEach(function(kw){
-		fns.push(searchSupervalu(kw));
-		fns.push(searchTesco(kw));
-		fns.push(searchAldi(kw));
+		fns.push(searchSupervalu(kw, req.page, req.count/3));
+		fns.push(searchTesco(kw, req.page, req.count/3));
+		fns.push(searchAldi(kw, req.page, req.count/3));
 	})
 
 	Q.all(fns)
@@ -25,10 +25,12 @@ exports.fire = function(keyword){
 	return deferred.promise;
 }
 
-function searchSupervalu(keyword){
+function searchSupervalu(keyword, page, count){
 	var deferred = Q.defer();
 	SuperValuProduct.findAll({
 		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'promo'],
+		limit: count,
+		offset: (page - 1) * count,
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -53,29 +55,31 @@ function searchSupervalu(keyword){
 	.then(function(result){
 		var products = [];
 		result.forEach(function(product){
-			products.push({
-				store: 'Supervalu',
-				keyword: keyword,
+			var p = {
+				s: 'S',
+				q: keyword,
 				id: product.id,
-				name: product.name,
-				image: product.image,
-				price: product.price,
-				measure: product.measure,
-				price_desc: product.price_desc,
-				promo: product.promo,
-				category: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
-			});
+				c: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
+			}
+			if(product.name) p.n = product.name;
+			if(product.image) p.im = product.image;
+			if(product.price) p.p = product.price;
+			if(product.measure) p.m = product.measure;
+			if(product.price_desc) p.pd = product.price_desc;
+			if(product.promo) p.pr = product.promo;
+			products.push(p);
 		});
 		deferred.resolve(products);
 	});
-
 	return deferred.promise;
 }
 
-function searchTesco(keyword){
+function searchTesco(keyword, page, count){
 	var deferred = Q.defer();
 	TescoProduct.findAll({
 		attributes: ['id', 'name', 'image', 'price', 'price_desc', 'promo'],
+		limit: count,
+		offset: (page - 1) * count,
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -100,28 +104,30 @@ function searchTesco(keyword){
 	.then(function(result){
 		var products = [];
 		result.forEach(function(product){
-			products.push({
-				store: 'Tesco',
-				keyword: keyword,
+			var p = {
+				s: 'T',
+				q: keyword,
 				id: product.id,
-				name: product.name,
-				image: product.image,
-				price: product.price,
-				price_desc: product.price_desc,
-				promo: product.promo,
-				category: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
-			});
+				c: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
+			}
+			if(product.name) p.n = product.name;
+			if(product.image) p.im = product.image;
+			if(product.price) p.p = product.price;
+			if(product.price_desc) p.pd = product.price_desc;
+			if(product.promo) p.pr = product.promo;
+			products.push(p);
 		});
 		deferred.resolve(products);
 	});
 	return deferred.promise;
 }
 
-function searchAldi(keyword){
+function searchAldi(keyword, page, count){
 	var deferred = Q.defer();
-
 	AldiProduct.findAll({
 		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'limited', 'category'],
+		limit: count,
+		offset: (page - 1) * count,
 		where: {
 			$or: {
 				category: { like: '%' + keyword + '%' },
@@ -132,18 +138,19 @@ function searchAldi(keyword){
 	.then(function(result){
 		var products = [];
 		result.forEach(function(product){
-			products.push({
-				store: 'Aldi',
-				keyword: keyword,
+			var p = {
+				s: 'A',
+				q: keyword,
 				id: product.id,
-				name: product.name,
-				image: product.image,
-				price: product.price,
-				measure: product.measure,
-				price_desc: product.price_desc,
-				limited: product.limited,
-				category: product.category
-			});
+				c: product.category
+			}
+			if(product.name) p.n = product.name;
+			if(product.image) p.im = product.image;
+			if(product.price) p.p = product.price;
+			if(product.measure) p.m = product.measure;
+			if(product.price_desc) p.pd = product.price_desc;
+			if(product.limited) p.l = product.limited;
+			products.push(p);
 		});
 		deferred.resolve(products);
 	});
