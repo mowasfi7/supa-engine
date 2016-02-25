@@ -65,7 +65,7 @@ function searchSupervalu(keyword){
 			if(product.measure) p.m = product.measure;
 			if(product.price_desc) p.pd = product.price_desc;
 			if(product.promo) p.pr = product.promo;
-			if(product.limited) p.l = new Date(product.limited).getTime();
+			if(product.limited) p.l = product.limited;
 			products.push(p);
 		});
 		deferred.resolve(products);
@@ -133,6 +133,7 @@ function searchAldi(keyword){
 	.then(function(result){
 		var products = [];
 		result.forEach(function(product){
+			console.log(product.limited);
 			var p = {
 				s: 'a',
 				q: keyword,
@@ -144,7 +145,7 @@ function searchAldi(keyword){
 			if(product.price) p.p = product.price;
 			if(product.measure) p.m = product.measure;
 			if(product.price_desc) p.pd = product.price_desc;
-			if(product.limited) p.l = new Date(product.limited).getTime();
+			if(product.limited) p.l = product.limited;
 			products.push(p);
 		});
 		deferred.resolve(products);

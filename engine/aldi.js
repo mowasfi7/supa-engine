@@ -174,7 +174,7 @@ function parseNInsertProducts(links, products, deferred){
 			
 			var limited = links[0].match(/.*specialbuys\/(.*)\/products.*/);
 			if(limited){
-				limited = dateFormat(new Date(limited[1].replace(/^\w+-/, '')), 'd-m');
+				limited = dateFormat(new Date(limited[1].replace(/^\w+-/, '')), 'mmm dS');
 			}
 
 			products.push({

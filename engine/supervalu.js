@@ -183,7 +183,7 @@ function pullNInsertProducts(sessionKey, cats, rawProducts, deferred){
 				measure: measure ? measure[1] : product.UnitOfMeasure,
 				price_desc: product.PriceDesc,
 				promo: product.PromotionBulletText ? product.PromotionBulletText : product.PromoDesc,
-				limited: product.PromotionEndDate ? dateFormat(new Date(product.PromotionEndDate.substring(0,4) + "-" + product.PromotionEndDate.substring(4,6) + "-" + product.PromotionEndDate.substring(6,8)), 'd-m') : null
+				limited: product.PromotionEndDate ? dateFormat(new Date(product.PromotionEndDate.substring(0,4) + "-" + product.PromotionEndDate.substring(4,6) + "-" + product.PromotionEndDate.substring(6,8)), 'mmm dS') : null
 			});
 		});
 		SuperValuProduct.bulkCreate(parsedProducts, {updateOnDuplicate: ['name', 'cat_id', 'image', 'price', 'measure', 'price_desc', 'promo', 'limited', 'updated_at']})

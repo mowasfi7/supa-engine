@@ -9,9 +9,9 @@ router.get('/',
 		var deferred = Q.defer();
 
 		var fns = [];
-		fns.push(sv_engine.fire());
+		//fns.push(sv_engine.fire());
 		//fns.push(ts_engine.fire());
-		//fns.push(al_engine.fire());
+		fns.push(al_engine.fire());
 
 		Q.all(fns)
 		.then(function(result){
