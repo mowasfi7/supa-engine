@@ -28,7 +28,7 @@ exports.fire = function(keyword){
 function searchSupervalu(keyword){
 	var deferred = Q.defer();
 	SuperValuProduct.findAll({
-		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'promo'],
+		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'promo', 'limited'],
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -65,6 +65,7 @@ function searchSupervalu(keyword){
 			if(product.measure) p.m = product.measure;
 			if(product.price_desc) p.pd = product.price_desc;
 			if(product.promo) p.pr = product.promo;
+			if(product.limited) p.l = new Date(product.limited).getTime();
 			products.push(p);
 		});
 		deferred.resolve(products);
@@ -143,7 +144,7 @@ function searchAldi(keyword){
 			if(product.price) p.p = product.price;
 			if(product.measure) p.m = product.measure;
 			if(product.price_desc) p.pd = product.price_desc;
-			if(product.limited) p.l = product.limited;
+			if(product.limited) p.l = new Date(product.limited).getTime();
 			products.push(p);
 		});
 		deferred.resolve(products);

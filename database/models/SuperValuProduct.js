@@ -7,7 +7,8 @@ module.exports = function(sequelize, DataTypes) {
 		price: DataTypes.FLOAT.UNSIGNED,
 		measure: DataTypes.STRING,
 		price_desc: DataTypes.STRING,
-		promo: DataTypes.STRING
+		promo: DataTypes.STRING,
+		limited: DataTypes.STRING(8)
 	}, {
 		underscored: true,
 		tableName: 'sv_products',

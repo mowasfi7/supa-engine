@@ -2,6 +2,7 @@ var http = require('follow-redirects').http,
 	cheerio = require('cheerio'),
 	color = require('cli-color'),
 	Q = require('q'),
+	dateFormat = require('dateformat'),
 	toTitleCase = require('to-title-case'),
 	AldiProduct = require('../database').AldiProduct;
 
@@ -11,7 +12,7 @@ exports.fire = function(){
 		return parseProductLinks(result);
 	})
 	.then(function(result){
-		return parseNInsertProducts(result, [], Q.defer());
+		return parseNInsertProducts(result.splice(0,10), [], Q.defer());
 	})
 	.then(function(result){
 		var deferred = Q.defer();
@@ -151,6 +152,9 @@ function parseNInsertProducts(links, products, deferred){
 					  .replace('products detail page|ps|p|', '')
 					  .replace('about aldi|', '');
 			parents = parents.substring(0, parents.lastIndexOf('|'));
+			if(parents.indexOf('specialbuys') > -1){
+				parents = parents.split('|')[0];
+			}
 			
 			var value = $('.box--value').text().trim().replace('€', '') + $('.box--decimal').text().trim();
 			if(value.indexOf('c') > -1){
@@ -169,6 +173,9 @@ function parseNInsertProducts(links, products, deferred){
 			//				  utils($('.detail-tabcontent').html(), /<h2 class="ym-print">(.*)<\/h2>/);
 			
 			var limited = links[0].match(/.*specialbuys\/(.*)\/products.*/);
+			if(limited){
+				limited = dateFormat(new Date(limited[1].replace(/^\w+-/, '')), 'd-m');
+			}
 
 			products.push({
 				url: links[0],
@@ -179,7 +186,7 @@ function parseNInsertProducts(links, products, deferred){
 				measure: per.length > 0 ? per: null,
 				price_desc: detailamount.length > 0 ? detailamount : null,
 				//description: description.length > 0 ? description : null,
-				limited: limited ? limited[1] : null
+				limited: limited
 			});
 
 			links.splice(0, 1);

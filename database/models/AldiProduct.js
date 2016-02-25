@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
 		measure: DataTypes.STRING,
 		price_desc: DataTypes.STRING,
 		//description: DataTypes.STRING(1280),
-		limited: DataTypes.STRING
+		limited: DataTypes.STRING(8)
 	}, {
 		underscored: true,
 		tableName: 'al_products',
