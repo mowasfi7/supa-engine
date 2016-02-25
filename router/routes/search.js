@@ -1,9 +1,9 @@
 var router = require('express').Router(),
 	engine = require('../../engine/search');
 
-router.get('/:keyword/:page/:count',
+router.get('/:keyword',
 	function (req, res, next) {
-		engine.fire(req.params)
+		engine.fire(req.params.keyword)
 		.then(function(result){
 			res.json(result);
 		})

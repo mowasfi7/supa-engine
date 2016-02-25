@@ -5,16 +5,16 @@ var Q = require('q'),
 	TescoProduct = require('../database').TescoProduct,
 	AldiProduct = require('../database').AldiProduct;
 
-exports.fire = function(req){
+exports.fire = function(keyword){
 	var deferred = Q.defer();
-	var keywords = req.keyword.split('|');
+	var keywords = keyword.split('|');
 
 	var fns = [];
 
 	keywords.forEach(function(kw){
-		fns.push(searchSupervalu(kw, req.page, req.count/3));
-		fns.push(searchTesco(kw, req.page, req.count/3));
-		fns.push(searchAldi(kw, req.page, req.count/3));
+		fns.push(searchSupervalu(kw));
+		fns.push(searchTesco(kw));
+		fns.push(searchAldi(kw));
 	})
 
 	Q.all(fns)
@@ -25,12 +25,10 @@ exports.fire = function(req){
 	return deferred.promise;
 }
 
-function searchSupervalu(keyword, page, count){
+function searchSupervalu(keyword){
 	var deferred = Q.defer();
 	SuperValuProduct.findAll({
 		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'promo'],
-		limit: count,
-		offset: (page - 1) * count,
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -74,12 +72,10 @@ function searchSupervalu(keyword, page, count){
 	return deferred.promise;
 }
 
-function searchTesco(keyword, page, count){
+function searchTesco(keyword){
 	var deferred = Q.defer();
 	TescoProduct.findAll({
 		attributes: ['id', 'name', 'image', 'price', 'price_desc', 'promo'],
-		limit: count,
-		offset: (page - 1) * count,
 		where: {
 			name: {
 				like: '%' + keyword + '%'
@@ -122,12 +118,10 @@ function searchTesco(keyword, page, count){
 	return deferred.promise;
 }
 
-function searchAldi(keyword, page, count){
+function searchAldi(keyword){
 	var deferred = Q.defer();
 	AldiProduct.findAll({
 		attributes: ['id', 'name', 'image', 'price', 'measure', 'price_desc', 'limited', 'category'],
-		limit: count,
-		offset: (page - 1) * count,
 		where: {
 			$or: {
 				category: { like: '%' + keyword + '%' },
