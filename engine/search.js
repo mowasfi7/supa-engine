@@ -56,7 +56,7 @@ function searchSupervalu(keyword, page, count){
 		var products = [];
 		result.forEach(function(product){
 			var p = {
-				s: 'S',
+				s: 's',
 				q: keyword,
 				id: product.id,
 				c: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
@@ -105,7 +105,7 @@ function searchTesco(keyword, page, count){
 		var products = [];
 		result.forEach(function(product){
 			var p = {
-				s: 'T',
+				s: 't',
 				q: keyword,
 				id: product.id,
 				c: product.Category.Parent.Parent.name + "|" + product.Category.Parent.name + "|" + product.Category.name
@@ -139,7 +139,7 @@ function searchAldi(keyword, page, count){
 		var products = [];
 		result.forEach(function(product){
 			var p = {
-				s: 'A',
+				s: 'a',
 				q: keyword,
 				id: product.id,
 				c: product.category
