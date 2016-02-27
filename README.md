@@ -10,11 +10,11 @@ Is the Shizzz! You know what I'm sayin?
 - Autocomplete
 
 ## Frontend
-- Sorting by price, value, store and name
-- Optimized display
-- Paginate
-- Add/Remove from shopping list
-- Separate concerns
+- Sorting by price, value, store and name - **DONE**
+- Paginate - **DONE**
+- Add/Remove from shopping list - **DONE**
+- Separation of concerns and classifying things
+- Unit Testing
 
 # Phase 2
 
@@ -22,14 +22,14 @@ Is the Shizzz! You know what I'm sayin?
 - Details section
 - Search overhaul including (fuzzy search, relevancy)
 - Authentication
-- Fav
+- Favourites
 
 ## Frontend
 - Details section
 - Print shopping list
 - Authentication
 - Design + Logo
-- Fav
+- Favourites
 
 # JSON structure
 ```javascript
@@ -58,4 +58,4 @@ Is the Shizzz! You know what I'm sayin?
 - Price Description - The standardised price. e.g. "€0.73 per litre"
 - Promo - Information about offers. e.g. "Was €2.37, Now €1.18, Save €1.19"
 - Category - The category hierarchy. e.g. "Kitchen Cupboard|Chocolate & Sweets|Chocolate & Sugar Bags"
-- Limited - Product only available until this date. e.g. "21-feb"
+- Limited - Product only available until this date. e.g. "21th Feb"
